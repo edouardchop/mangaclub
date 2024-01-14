@@ -1,7 +1,8 @@
-export default function Filter({onClick,onKeyDown})
-{return(
+export default function Filter({onChange,onKeyDown})
+{
+  return (
   <div>
-    <select onClick={ onClick } onKeyDown={ onKeyDown } id="selectInput" className="block p-2 ps-5 w-72 text-sm text-gray-900 border">
+      <select onChange={ onChange } onKeyDown={ onKeyDown } id="selectInput" className="block p-2 ps-5 w-72 text-sm text-gray-900 border">
       <option value="" disabled >Filter</option>
         <option value="action">Action</option>
         <option value="aventure">Aventure</option>

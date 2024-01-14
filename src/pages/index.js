@@ -6,14 +6,17 @@ import mangas from "../backOffice/mangas"
 import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
+import VerticalBar from "@/components/VerticalBar";
+import allTags from "@/backOffice/allTags";
 
 export default function Home ()
 {
   const [ filteredMangaData, setFilteredMangaData ] = useState( allMangaData )
   const [ NoManga, setNoManga ] = useState( false )
-  const [textSearch,setTextSearch]=useState(0)
+  const [ textSearch, setTextSearch ] = useState( 0 )
+const [showRightBar,setShowRightBar]=useState(false)
 
-  
+  /*
   const handleSearch = ( e ) =>
   {setNoManga(false)
     const searchData = allMangaData.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value)
@@ -24,12 +27,18 @@ export default function Home ()
     }
   }
   
-      const handleInputChange = (e) => {
-    const value = e.target.value;
+  const handleInputChange = ( e ) =>
+  {setNoManga(false)
+ 
+      const value = e.target.value;
       setTextSearch( value );
-      console.log("voici la value : ",textSearch)
-      }
-  
+      console.log( "voici la value : ", textSearch )
+    if ( value.length == 0 )
+    {
+      setNoManga(true)
+    }
+  }
+  */
     const handleSearchPartial = ( e ) =>
     {
     setNoManga( false )
@@ -39,31 +48,46 @@ export default function Home ()
 
     if ( searchData.length == 0 )
     {
+      setTextSearch()
       setNoManga(true)
     }
     }
 
     const handleTag = (element) =>
-  {
+  {setNoManga( false )
     const searchData = mangas.filter( ( manga ) => element === manga.tag1|| element === manga.tag2)
       setFilteredMangaData( searchData )
-      setTextSearch(element)
+      setTextSearch( element )
+      if ( searchData.length == 0 )
+    {
+      setNoManga(true)
+    }
+      
 
   }
-  
+  const filterAllManga = () =>
+  {
+    setFilteredMangaData( allMangaData )
+    setTextSearch( "Tout les mangas" )
+    setNoManga(false)
+    
+  }
   return (
-    <div> 
-      <Navbar onSearch={ handleSearch } onFilter={ handleTag } />
+    <div>
+      <Navbar onClick={ () => setShowRightBar( !showRightBar ) } /> 
+      { showRightBar && <div className="sticky z-10"><VerticalBar onClick={ () => setShowRightBar( !showRightBar ) } >
+        { allTags.map( tag => <button onClick={ () => handleTag( tag ) } key={ tag } className="border-2 p-6 text-center w-full">{ tag }</button> ) }
+        </VerticalBar></div>}
       <h1 className="py-10 text-4xl font-bold text-black text-center">{ textSearch == 0 ? "Tout les mangas" : textSearch }</h1>
       <div className="md:flex justify-between ms-12 md:ms-36 me-36">
-      <Search onClick={ () => handleTag( textSearch ) } onChange={ handleInputChange } onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } /> 
+      <Search onClick={ () => handleTag( textSearch ) } onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } /> 
       <div className="flex">
-          <Tag onClick={ () => { setFilteredMangaData( allMangaData ),setTextSearch("Tout les mangas") } } key={ "all" } tag={ "all" } />
+          <Tag onClick={filterAllManga} key={ "all" } tag={ "all" } />
       <Tag onClick={ () => handleTag( "aventure" ) } key={ "aventureFilter" } tag={ "aventure" } />
       <Tag onClick={ () => handleTag( "romance" ) } key={ "romanceFilter" } tag={ "romance" } />
       <Tag onClick={ () => handleTag( "shonen" ) } key={ "shonenFilter" } tag={ "shonen" } />
       </div>  
-        <Filter onClick={ ( e ) => { handleSearchPartial( e )} } onKeyDown={ ( e ) => { if ( e.key == "Enter" ) {handleSearchPartial( e )} } } />
+        <Filter onChange={ ( e ) => { { handleSearchPartial( e ) } } } onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } />
     </div>
     <div>
         { !NoManga &&
@@ -79,8 +103,9 @@ export default function Home ()
                                     )
             }
           </div> }
-        { NoManga && <div>No Manga Found</div> }
+        { NoManga && <div className="text-center pt-36 text-2xl font-bold">No Manga Found</div> }
      </div>
 </div>
 )
 }
+

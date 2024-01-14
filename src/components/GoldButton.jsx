@@ -1,14 +1,12 @@
+import Link from "next/link"
 export default function GoldButton ( { text, url } )
 {
     const redirection = () =>
     {
-        Router.push(url)
     }
     
     return (
-        <button Onclick={ redirection } style={{ backgroundColor: '#D7C412', color: 'black' }}>
-            { text }
-        </button>
+        <Link href={ url } className=" py-4 px-2 font-bold mx-6" style={ { backgroundColor: '#D7C412' } }>{text}</Link>
     )
 
 }
