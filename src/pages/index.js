@@ -1,3 +1,4 @@
+import axios from "axios";
 import allMangaData from "../backOffice/mangas"
 import Navbar from "../components/Navbar"
 import OneManga from "@/components/OneManga"
@@ -11,6 +12,7 @@ import allTags from "@/backOffice/allTags";
 
 export default function Home ()
 {
+
   const [ filteredMangaData, setFilteredMangaData ] = useState( allMangaData )
   const [ NoManga, setNoManga ] = useState( false )
   const [ textSearch, setTextSearch ] = useState( 0 )

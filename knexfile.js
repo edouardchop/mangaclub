@@ -10,6 +10,7 @@ const knexfile = {
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DATABASE,
     ssl: { rejectUnauthorized: false },
+    port:process.env.PORT
   },
   migrations: {
     directory: resolve("src/api/db/migrations"),

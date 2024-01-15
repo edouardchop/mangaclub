@@ -1,4 +1,3 @@
-// migration_create_users.js
 exports.up = function (knex) {
   return knex.schema.createTable('users', function (table) {
     table.increments( 'id' ).primary();
