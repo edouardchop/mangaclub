@@ -26,19 +26,20 @@ const [showRightBar,setShowRightBar]=useState(false)
       setNoManga(true)
     }
   }
-  
+  */
   const handleInputChange = ( e ) =>
   {setNoManga(false)
  
-      const value = e.target.value;
-      setTextSearch( value );
+      const value = e.target.value
+      setTextSearch( value )
       console.log( "voici la value : ", textSearch )
     if ( value.length == 0 )
     {
       setNoManga(true)
     }
   }
-  */
+  
+
     const handleSearchPartial = ( e ) =>
     {
     setNoManga( false )
@@ -72,15 +73,14 @@ const [showRightBar,setShowRightBar]=useState(false)
     setNoManga(false)
     
   }
+
   return (
     <div>
       <Navbar onClick={ () => setShowRightBar( !showRightBar ) } /> 
-      { showRightBar && <div className="sticky z-10"><VerticalBar onClick={ () => setShowRightBar( !showRightBar ) } >
-        { allTags.map( tag => <button onClick={ () => handleTag( tag ) } key={ tag } className="border-2 p-6 text-center w-full">{ tag }</button> ) }
-        </VerticalBar></div>}
+      { showRightBar && <VerticalBar onClick={ () => setShowRightBar( !showRightBar ) } />}
       <h1 className="py-10 text-4xl font-bold text-black text-center">{ textSearch == 0 ? "Tout les mangas" : textSearch }</h1>
       <div className="md:flex justify-between ms-12 md:ms-36 me-36">
-      <Search onClick={ () => handleTag( textSearch ) } onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } /> 
+      <Search onClick={ handleTag }  onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } /> 
       <div className="flex">
           <Tag onClick={filterAllManga} key={ "all" } tag={ "all" } />
       <Tag onClick={ () => handleTag( "aventure" ) } key={ "aventureFilter" } tag={ "aventure" } />
@@ -93,7 +93,7 @@ const [showRightBar,setShowRightBar]=useState(false)
         { !NoManga &&
           <div className="flex flex-wrap justify-center md:justify-start pt-24">
             { filteredMangaData.map( ( manga ) => (
-              <div className="mx-2" key={ manga.id }>
+              <div className="mx-2 hover:scale-110" key={ manga.id }>
                 <OneManga { ...manga }>
                   <Tag onClick={ () => handleTag( manga.tag1 ) } key={ manga.tag1 } tag={ manga.tag1 } />
                   <Tag onClick={ () => handleTag( manga.tag2 ) } key={ manga.tag2 } tag={ manga.tag2 } />

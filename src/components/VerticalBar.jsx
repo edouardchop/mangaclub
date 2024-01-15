@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import Link from "next/link"
 import { FaWindowClose } from "react-icons/fa"
 import logo from "/public/images/logo.png"
 import Image from 'next/image'
@@ -6,7 +6,6 @@ import Image from 'next/image'
 
 
 export default function VerticalBar ({onClick,children}) {
-const [HideFilter,setHideFilter]=useState(false)
   return (
 
 
@@ -20,17 +19,12 @@ const [HideFilter,setHideFilter]=useState(false)
         />
         <button onClick={ onClick } className="pb-7 md:ps-4 ps-12 pt-3">
           <FaWindowClose size={ 70 }/></button>
-          </div>
-          <div>
-            {HideFilter&&<div><button className="border-2 p-7 w-full" onClick={()=>setHideFilter(!HideFilter)}>
-              hide filter
-            </button>
-            {children}
-          </div>}</div>
-          { !HideFilter && <button className="border-2 p-7 w-full" onClick={ () => setHideFilter( !HideFilter ) }>Show Filter</button> }
-          <div className="border-2 p-7 text-center">Vos favoris</div>
-          <div className="border-2 p-7 text-center">Inscription</div>
-          <div className="border-2 p-7 text-center">Connexion</div>
+      </div>
+      <div className="flex flex-col">
+          <Link href="/favoris"className="border-2 p-7 text-center">Vos favoris</Link>
+          <Link href="/signin"className="border-2 p-7 text-center">Inscription</Link>
+        <Link href="/signup" className="border-2 p-7 text-center">Connexion</Link>
+        </div>
       </aside>
 
 

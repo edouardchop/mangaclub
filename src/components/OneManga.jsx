@@ -14,7 +14,7 @@ export default function OneManga ( { children, source, name, rate } )
         width={200}
         /> 
         </div>
-        <div className=" border-2 border-t-0 border-black">
+        <div className=" border-2 border-t-0 border-black bg-white">
         <div className="font-semibold flex place-content-center break-normal">
         {name}    
         </div>
