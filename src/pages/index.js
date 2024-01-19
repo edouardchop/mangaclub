@@ -2,7 +2,7 @@ import axios from "axios";
 import allMangaData from "../backOffice/mangas"
 import Navbar from "../components/Navbar"
 import OneManga from "@/components/OneManga"
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import mangas from "../backOffice/mangas"
 import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
@@ -10,14 +10,29 @@ import Search from "@/components/Search";
 import VerticalBar from "@/components/VerticalBar";
 import allTags from "@/backOffice/allTags";
 
-export default function Home ()
-{
 
-  const [ filteredMangaData, setFilteredMangaData ] = useState( allMangaData )
+export const getServerSideProps = async ({ params }) => {
+
+  const categoryResponse = await axios.get("http://localhost:3000/api/categories")
+
+  const { data: categoryData } = categoryResponse
+
+
+  return {
+    props: {
+      category: categoryData.result,
+
+    }
+  }
+}
+export default function Home (props)
+{
+  const categories=props.category
+  const [ filteredMangaData, setFilteredMangaData ] = useState(allMangaData)
   const [ NoManga, setNoManga ] = useState( false )
   const [ textSearch, setTextSearch ] = useState( 0 )
 const [showRightBar,setShowRightBar]=useState(false)
-
+console.log("voici les catégories : ",categories)
   /*
   const handleSearch = ( e ) =>
   {setNoManga(false)
@@ -40,12 +55,11 @@ const [showRightBar,setShowRightBar]=useState(false)
       setNoManga(true)
     }
   }
-  
 
     const handleSearchPartial = ( e ) =>
     {
     setNoManga( false )
-      const searchData = allMangaData.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value )
+      const searchData = categories.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value )
       setFilteredMangaData( searchData )
       setTextSearch(e.target.value)
 
@@ -70,7 +84,7 @@ const [showRightBar,setShowRightBar]=useState(false)
   }
   const filterAllManga = () =>
   {
-    setFilteredMangaData( allMangaData )
+    setFilteredMangaData( categories )
     setTextSearch( "Tout les mangas" )
     setNoManga(false)
     
@@ -85,9 +99,9 @@ const [showRightBar,setShowRightBar]=useState(false)
       <Search onClick={ handleTag }  onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } /> 
       <div className="flex">
           <Tag onClick={filterAllManga} key={ "all" } tag={ "all" } />
-      <Tag onClick={ () => handleTag( "aventure" ) } key={ "aventureFilter" } tag={ "aventure" } />
-      <Tag onClick={ () => handleTag( "romance" ) } key={ "romanceFilter" } tag={ "romance" } />
-      <Tag onClick={ () => handleTag( "shonen" ) } key={ "shonenFilter" } tag={ "shonen" } />
+      <Tag onClick={ () => handleTag( "Aventure" ) } key={ "aventureFilter" } tag={ "Aventure" } />
+      <Tag onClick={ () => handleTag( "Romance" ) } key={ "romanceFilter" } tag={ "Romance" } />
+      <Tag onClick={ () => handleTag( "Shonen" ) } key={ "shonenFilter" } tag={ "Shonen" } />
       </div>  
         <Filter onChange={ ( e ) => { { handleSearchPartial( e ) } } } onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } />
     </div>
