@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 
 export const getServerSideProps = async ({ params }) => {
 
-  const categoryResponse = await axios.get("http://localhost:3000/api/categories")
-
+  const categoryResponse = await axios.get("http://localhost:3000/api/category")
+console.log("ici")
   const { data: categoryData } = categoryResponse
 
 
@@ -15,10 +15,9 @@ export const getServerSideProps = async ({ params }) => {
     }
   }
 }
-function Categories (props )
+function Categories (props)
 {
-  const allCategories = props.category
-  const [categories, setCategories] = useState(allCategories);
+  const categories = props.category
   console.log("voici les categories : ", categories);
 
   return (

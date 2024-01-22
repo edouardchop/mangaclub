@@ -1,9 +1,9 @@
 import axios from "axios";
-import allMangaData from "../backOffice/mangas"
+import allMangaData from "./api/manga"
 import Navbar from "../components/Navbar"
 import OneManga from "@/components/OneManga"
 import { useEffect,useState } from "react";
-import mangas from "../backOffice/mangas"
+import mangas from "./api/manga"
 import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
@@ -13,7 +13,7 @@ import allTags from "@/backOffice/allTags";
 
 export const getServerSideProps = async ({ params }) => {
 
-  const categoryResponse = await axios.get("http://localhost:3000/api/categories")
+  const categoryResponse = await axios.get("http://localhost:3000/api/category")
 
   const { data: categoryData } = categoryResponse
 

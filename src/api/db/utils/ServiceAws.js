@@ -1,3 +1,4 @@
+// config aws
 import * as AWS from "aws-sdk";
 
 
@@ -12,42 +13,43 @@ export class AwsService {
       },
     })
   }
-
-  async uploadFile({ content, name, type }) {
-    const params = {
-      Bucket: process.env.AWS_BUCKET,
-      Key: name,
-      Body: content,
-      ContentType: type,
-    }
-
-    await this.s3
-      .upload(params, (err, data) => {
-        if (err) {
-          return "Error uploading file:", err
-        } else {
-          return `File uploaded successfully. ${data.Location}`
-        }
-      })
-      .promise()
+async uploadFile(name, type, buf) {
+  const params = {
+    Bucket: process.env.AWS_BUCKET,
+    Key: name,
+    Body: Buffer.from(buf),
+    ContentType: type,
+    ContentEncoding: 'base64',
+  };
+console.log("les params : ",params)
+  try {
+    const data = await this.s3.upload(params).promise();
 
     return {
       url: `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${name}`,
-    }
+      data,
+    };
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error; // Rejet de la promesse pour indiquer une erreur
   }
+}
 
-  async getFileStream({ fileKey }) {
+  async getFileStream ( fileKey )
+  {
+    console.log("on est dans getFileStream")
     const params = {
       Bucket: process.env.AWS_BUCKET,
-      Key: fileKey,
+      Key: fileKey
     }
 
+console.log("les params : ",params)
     try {
       const data = await this.s3.getObject(params).promise()
 
       return {
         file: data.Body,
-        url: `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`,
+        url: `https://${ process.env.AWS_BUCKET }.s3.${ process.env.AWS_REGION }.amazonaws.com/${ fileKey }`
       }
     } catch (error) {
       return "Error retrieving file:", error

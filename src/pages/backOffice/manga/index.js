@@ -1,6 +1,6 @@
 import { useState } from "react"
-
-
+import axios from 'axios';
+import LineBackOffice from "@/components/LineBackOffice";
 export const getServerSideProps = async ({ params }) => {
 
   const mangaResponse = await axios.get("http://localhost:3000/api/manga")
@@ -17,36 +17,56 @@ export const getServerSideProps = async ({ params }) => {
 }
 
 
+
 export default function MangaCategory (props)
 {
+const mangas = props.manga
+const allManga=mangas.map(manga=>[manga.id,manga.name])
+
+const [ lines, setLines ] = useState( allManga )
+  const [ incrementId, setIncrementId ] = useState( allManga.length + 1 )
+  
 
 
-    const firstLine={
-      id:1,
-      name:"new Name",
-      source:"new Source"
-    }
-const [lines,setLines]=useState([firstLine])
 
-const addOneLine = () =>
-{
- const newLine = {
-      id: lines.length + 1,
-      name:"new Name",
-      source:"new Source"
+
+
+  const addOneLine = () =>
+  {
+    setIncrementId(incrementId + 1 )
+    const newLine = {
+      id: incrementId,
+      name: ""
+
     };
-setLines([...lines, newLine]);
-console.log( lines )    
-    }
+    const thisLine=[newLine.id,newLine.name]
+    setLines( [ ...lines,thisLine ]);
+console.log("voici la nouvelle ligne : ",thisLine )    
+  }
+  
+
+
+
+
+  
     
-const deleteLine = ( e ) =>
-{
-    console.log(e)
-const thisId = e.id
-console.log( thisId )
-const newLines = lines.filter( line => line.id != e.id )
+  const deleteLine = ( line ) =>
+  {
+    const newLines = lines.filter( otherLine => otherLine[ 0]!= line[0] )
    setLines(newLines) 
-}
+  }
+  
+  const changeName = (line,e) =>
+  {
+    const otherLines = lines.filter( otherLine => otherLine[ 0 ] != line[ 0 ] )
+    const newLine=[line[0],e.target.value]
+    const transLines = [ ...otherLines, newLine ]
+    const sortedLines = transLines.sort((a, b) => a[0] - b[0]);
+    setLines( sortedLines )
+    console.log( "la Ligne :", transLines )
+
+
+  }
 return (
 
     <>
@@ -59,21 +79,18 @@ return (
           <tr className="bg-gray-200">
             <th className="p-4">ID</th>
             <th className="p-4">Name</th>
-            <th className="p-4">Source</th>
+          <th className="p-4">
+          Source
+          </th>
             <th className="p-4">Modifier/supprimer</th>          
         </tr>
         </thead> 
         <tbody>
-        {lines.map(line=>
-          <tr className="border-b text-center">
-            <td className="p-4">1</td>
-            <td className="p-4">Example Name 1</td>
-            <td className="p-4">Example Source 1</td>
-            <td className="p-4">
-            <button className="bg-green-500 text-white px-4 py-2 mr-2">Modifier</button>
-            <button className="bg-red-500 text-white px-4 py-2" onClick={()=> deleteLine(line) }>Supprimer</button>
-            </td>
-          </tr>)} 
+        { lines.map( ( line ) =>
+          <LineBackOffice id={ line[ 0 ] } name={ line[ 1 ] } key={ line[ 0 ] } onClick={ () => deleteLine( line ) } >
+            <input onChange={ ( e ) => changeName( line,e ) } type="text" value={ line[ 1 ] } />
+          </LineBackOffice>
+)} 
         </tbody>
       </table>
     </>
