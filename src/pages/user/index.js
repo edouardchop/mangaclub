@@ -9,7 +9,7 @@ export async function getServerSideProps() {
   
     const response = await axios.get(`http://localhost:3000/api/image?Key=${fileKey}`,{
       responseType: 'arraybuffer',
-    })
+    }) //
 
     console.log("Requête vers image faite");
 
