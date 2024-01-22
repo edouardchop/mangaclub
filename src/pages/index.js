@@ -8,7 +8,7 @@ import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
 import VerticalBar from "@/components/VerticalBar";
-import allTags from "@/backOffice/allTags";
+import allTags from "@/api/db/allTags";
 
 
 export const getServerSideProps = async ({ params }) => {

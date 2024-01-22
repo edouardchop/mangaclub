@@ -3,7 +3,7 @@ import axios from 'axios';
 import LineBackOffice from "@/components/LineBackOffice";
 export const getServerSideProps = async ({ params }) => {
 
-  const mangaResponse = await axios.get("../../../api/manga/index.js")
+  const mangaResponse = await axios.get("../../../api/manga")
 
   const { data: mangaData } = mangaResponse
 

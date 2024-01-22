@@ -37,7 +37,8 @@ const ensureDatabaseConnection = async () => {
 const getAll = async (req,res) => {
   try
   {
-        await sequelize.authenticate();
+    await sequelize.authenticate();
+    console.log("on est identifé")
       const allMangas = await mangaModel.findAll()
       console.log("voici les mangas dans getAll:",mangaModel)
       res.send({ result: allMangas })
@@ -46,4 +47,4 @@ const getAll = async (req,res) => {
     res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
   }
 };
-export default getAll
+export default ensureDatabaseConnection

@@ -7,7 +7,8 @@ export async function getServerSideProps() {
     const fileKey = "blackLagoon.jpg"
     console.log( "voici le name :", fileKey );
   
-    const response = await axios.get(`http://localhost:3000/api/image?Key=${fileKey}`,{
+    const response = await axios.get( `../../api/db/image?Key=${fileKey}`, {
+
       responseType: 'arraybuffer',
     }) //
 

@@ -1,5 +1,5 @@
 // pages/api/user.js
-import { AwsService } from '../../api/db/utils/ServiceAws';
+import { AwsService } from '../utils/ServiceAws';
 
 
 export default async function handler ( req, res )
