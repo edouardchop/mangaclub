@@ -1,6 +1,6 @@
 // mangaCategoryModel.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../utils/newSequelize'); // Assurez-vous d'importer votre instance Sequelize correctement
+const sequelize = require('../newSequelize')
 
 const MangaCategory = sequelize.define('MangaCategory', {
   id: {

@@ -2,8 +2,8 @@ import onepiece from "public/images/onepiece.png"
 import bleach from "/public/images/bleach.jpg"
 import naruto2 from "/public/images/naruto2.jpg"
 
-const mangaModel = require('../../../api/db/models/mangaModel');
-const sequelize = require( "../../../api/db/utils/newSequelize" )
+import mangaModel from "@/api/db/models/mangaModel"
+const sequelize = require( "../../api/db/newSequelize")
 
 const allMangaData = [
   { id:"1", rate: "5", source: onepiece, name: "bleach", tag1: "Action", tag2: "Romance" },
@@ -37,7 +37,8 @@ const ensureDatabaseConnection = async () => {
 const getAll = async (req,res) => {
   try
   {
-        await sequelize.authenticate();
+    await sequelize.authenticate();
+    console.log("on est identifé")
       const allMangas = await mangaModel.findAll()
       console.log("voici les mangas dans getAll:",mangaModel)
       res.send({ result: allMangas })

@@ -1,14 +1,13 @@
 import axios from "axios";
-import allMangaData from "./api/manga"
+import allMangaData from "../api/manga"
 import Navbar from "../components/Navbar"
 import OneManga from "@/components/OneManga"
 import { useEffect,useState } from "react";
-import mangas from "./api/manga"
+import mangas from "../api/manga"
 import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
 import VerticalBar from "@/components/VerticalBar";
-import allTags from "@/backOffice/allTags";
 
 
 export const getServerSideProps = async ({ params }) => {

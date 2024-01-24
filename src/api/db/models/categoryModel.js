@@ -1,6 +1,6 @@
 
 const { DataTypes} = require( 'sequelize' );
-const sequelize = require( "../utils/newSequelize" )
+const sequelize = require('../newSequelize')
 
 const categoryModel = sequelize.define('categories', {
   id: {

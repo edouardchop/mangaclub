@@ -1,6 +1,6 @@
 // mangasModel.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../utils/newSequelize');
+const sequelize = require('../newSequelize')
 
 const mangaModel = sequelize.define('mangas', {
   id: {
