@@ -1,6 +1,6 @@
 
-const categoryModel = require( "../db/models/categoryModel" )  
-const sequelize = require( "../db/newSequelize")
+const categoryModel = require( "../../../api/db/models/categoryModel" )  
+const {sequelize} = require( "../../../api/db/newSequelize")
 const ensureDatabaseConnection = async () => {
   try {
     console.log( 'Connexion à la base de données établie avec succès.')

@@ -38,7 +38,7 @@ const uploadImage = () => {
  
 
             console.log( "les params dans LineBackOffice", params )
-            axios.post( "http://localhost:3000/api/image/",  params )
+            axios.post( "../api/image/",  params )
         .then(response => {
             console.log( response.data );
             console.log("youhou")

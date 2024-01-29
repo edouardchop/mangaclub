@@ -2,8 +2,9 @@ import onepiece from "public/images/onepiece.png"
 import bleach from "/public/images/bleach.jpg"
 import naruto2 from "/public/images/naruto2.jpg"
 
-const mangaModel = require('../db/models/mangaModel');
-const sequelize=require('../db/newSequelize')
+const mangaModel = require('../../../api/db/models/mangaModel');
+const sequelize = require( "../../../api/db/utils/newSequelize" )
+
 const allMangaData = [
   { id:"1", rate: "5", source: onepiece, name: "bleach", tag1: "Action", tag2: "Romance" },
   { id:"2",rate: "3", source: bleach, name: "one piece", tag1: "Romance", tag2: "Action" },

@@ -1,8 +1,7 @@
 // mangasModel.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../newSequelize')
-
-const mangaModel = sequelize.define('mangas', {
+import { DataTypes } from 'sequelize';
+const {sequelize} = require('../newSequelize');
+const mangaModel = sequelize.define( 'mangas', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -23,4 +22,4 @@ const mangaModel = sequelize.define('mangas', {
   
 });
 
-module.exports = mangaModel
+export default mangaModel

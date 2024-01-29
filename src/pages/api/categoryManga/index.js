@@ -1,4 +1,7 @@
-const getMangaByCategory = async ( req, res,category ) =>
+import categoryModel from "../../../api/db/models/categoryModel";
+import MangaCategory from "../../../api/db/models/MangaCategoryModel";
+import mangaModel from "../../../api/db/models/mangaModel";
+const getMangaByCategory = async ( req, res, category ) =>
 {let result=[]
   const nameCategory = await categoryModel.findOne( { where: { name:{category} } } );
   const allManga = await MangaCategory.findAll( { where: { categoryId: nameCategory.id } } )
@@ -12,7 +15,7 @@ const getMangaByCategory = async ( req, res,category ) =>
   res.send(result)
 }
 
-getCateogryByManga= async ( req, res,manga ) =>
+getCategoryByManga= async ( req, res,manga ) =>
 {let result=[]
   const nameManga = await mangaModel.findOne( { where: { name:{manga}} } );
   const getCategory = await MangaCategory.findAll( { where: { mangaId: nameManga.id } } )

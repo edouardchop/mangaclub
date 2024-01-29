@@ -1,7 +1,6 @@
 import onepiece from "public/images/onepiece.png"
 import bleach from "/public/images/bleach.jpg"
 import naruto2 from "/public/images/naruto2.jpg"
-
 import mangaModel from "@/api/db/models/mangaModel"
 const sequelize = require( "../../api/db/newSequelize")
 

@@ -1,5 +1,5 @@
-
-const categoryModel = require('../../api/db/models/categoryModel');
+import mangaModel from '../../../api/db/models/mangaModel';
+const {sequelize} = require('../../../api/db/newSequelize')
 
 const ensureDatabaseConnection = async () => {
   try {
@@ -13,14 +13,15 @@ const ensureDatabaseConnection = async () => {
 
 
 const getAll = async (req,res) => {
-  try {
-      const allCategories = await categoryModel.findAll()
-      console.log("voici les categories dans getAll:",categoryModel)
-      res.send({ result: allCategories })
+  try
+  {
+        await sequelize.authenticate();
+      const allMangas = await mangaModel.findAll()
+      console.log("voici les mangas dans getAll:",mangaModel)
+      res.send({ result: allMangas })
   } catch (error) {
-    console.error('Erreur lors de la récupération des catégories', error);
+    console.error('Erreur lors de la récupération des mangas', error);
     res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
   }
 };
-
-export default ensureDatabaseConnection
+export default getAll

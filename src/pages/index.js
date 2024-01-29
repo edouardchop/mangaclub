@@ -1,9 +1,7 @@
 import axios from "axios";
-import allMangaData from "../api/manga"
 import Navbar from "../components/Navbar"
 import OneManga from "@/components/OneManga"
-import { useEffect,useState } from "react";
-import mangas from "../api/manga"
+import {useState} from "react";
 import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
@@ -13,21 +11,25 @@ import VerticalBar from "@/components/VerticalBar";
 export const getServerSideProps = async ({ params }) => {
 
   const categoryResponse = await axios.get("http://localhost:3000/api/category")
-
   const { data: categoryData } = categoryResponse
-
+  console.log( "les categories : ", categoryData )
+  const mangaResponse = await axios.get( "http://localhost:3000/api/manga" )
+  const { data: mangaData } = mangaResponse
+console.log("voici les mangas :",mangaData)
 
   return {
     props: {
       category: categoryData.result,
+      manga:mangaData.result
 
     }
   }
 }
 export default function Home (props)
 {
-  const categories=props.category
-  const [ filteredMangaData, setFilteredMangaData ] = useState(allMangaData)
+  const categories = props.category
+  const mangas=props.manga
+  const [ filteredMangaData, setFilteredMangaData ] = useState(mangas)
   const [ NoManga, setNoManga ] = useState( false )
   const [ textSearch, setTextSearch ] = useState( 0 )
 const [showRightBar,setShowRightBar]=useState(false)

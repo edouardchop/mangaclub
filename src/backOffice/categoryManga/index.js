@@ -1,4 +1,7 @@
-const getMangaByCategory = async ( req, res,category ) =>
+import categoryModel from "@/api/db/models/categoryModel";
+import mangaModel from "@/api/db/models/mangaModel";
+import MangaCategory from "@/api/db/models/MangaCategoryModel"
+const getMangaByCategory = async ( req, res, category ) =>
 {let result=[]
   const nameCategory = await categoryModel.findOne( { where: { name:{category} } } );
   const allManga = await MangaCategory.findAll( { where: { categoryId: nameCategory.id } } )
