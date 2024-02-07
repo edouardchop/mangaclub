@@ -7,20 +7,18 @@ import Filter from "@/components/Filter";
 import Search from "@/components/Search";
 import VerticalBar from "@/components/VerticalBar";
 
-
 export const getServerSideProps = async ({ params }) => {
 
-  const categoryResponse = await axios.get("http://localhost:3000/api/category")
+  const categoryResponse = await axios.get( "http://localhost:3000/api/category" )
   const { data: categoryData } = categoryResponse
-  console.log( "les categories : ", categoryData )
   const mangaResponse = await axios.get( "http://localhost:3000/api/manga" )
   const { data: mangaData } = mangaResponse
-console.log("voici les mangas :",mangaData)
+
 
   return {
     props: {
       category: categoryData.result,
-      manga:mangaData.result
+      manga: mangaData.result
 
     }
   }
@@ -28,7 +26,7 @@ console.log("voici les mangas :",mangaData)
 export default function Home (props)
 {
   const categories = props.category
-  const mangas=props.manga
+  const mangas = props.manga
   const [ filteredMangaData, setFilteredMangaData ] = useState(mangas)
   const [ NoManga, setNoManga ] = useState( false )
   const [ textSearch, setTextSearch ] = useState( 0 )

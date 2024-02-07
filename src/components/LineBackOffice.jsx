@@ -5,6 +5,7 @@ import axios from "axios"
 
 export default function LineBackOffice ({id,name,onClick,children})
 {
+
     const [ modify, setModify ] = useState( false )
     const [ text, setText ] = useState( { name } )
     const [selectedFile, setSelectedFile] = useState(null);
@@ -17,6 +18,7 @@ export default function LineBackOffice ({id,name,onClick,children})
         console.log(file)
   };
 
+  
 const uploadImage = () => {
     if ( selectedFile )
     {
@@ -50,7 +52,24 @@ const uploadImage = () => {
 
       reader.readAsDataURL(selectedFile);
     } else { console.log("pas de fichier")}
-  };
+  }
+  const uploadManga = async () => {
+    const postData = {
+      name: req.params.name,
+      image:{
+                name:selectedFile.name,
+                type:selectedFile.type,
+                buf:bufParam
+            }
+    }
+    try {
+      const response = await axios.post("http://localhost:3000/api/manga/", postData);
+      console.log('Réponse de la requête POST :', response.data);
+    } catch (error) {
+      console.error('Erreur lors de la requête POST :', error);
+    }
+  }
+  
     return (
         <>
             { !modify &&
@@ -77,7 +96,7 @@ const uploadImage = () => {
                  </div>
                     </td>
             <td className="p-4">
-            <button className="bg-green-500 text-white px-4 py-2 mr-2" onClick={()=>setModify(!modify)}>Modifier</button>
+              <button className="bg-green-500 text-white px-4 py-2 mr-2" onClick={ () => { setModify( !modify ),uploadManga() } }>Modifier</button>
             <button className="bg-red-500 text-white px-4 py-2" onClick={onClick}>Supprimer</button>
             </td>
           </tr>

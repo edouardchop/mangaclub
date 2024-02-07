@@ -18,6 +18,9 @@ const mangaModel = sequelize.define( 'mangas', {
   updatedAt: {
     type: DataTypes.DATE,
     field: 'updated_at',
+  },
+  source: {
+    type:DataTypes.STRING,
   }
   
 });

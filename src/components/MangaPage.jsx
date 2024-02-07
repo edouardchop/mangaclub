@@ -2,11 +2,10 @@
 import OneManga from '@/components/OneManga';
 import axios from 'axios';
 
-export async function getServerSideProps({ params }) {
-  try {
-    const { manga } = params;
-    const fileKey = `${manga}.jpg`;
-
+export async function getServerSideProps() {
+  try
+  {
+    
     const response = await axios.get(`http://localhost:3000/api/image?Key=${fileKey}`, {
       responseType: 'arraybuffer',
     });
@@ -33,6 +32,9 @@ export async function getServerSideProps({ params }) {
   }
 }
 
-export default function MangaPage({ name, src }) {
+export default function MangaPage (props)
+{
+  const src = props.src;
+  const name = props.name;
   return <OneManga name={name} src={src} />;
 }

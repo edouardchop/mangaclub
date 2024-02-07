@@ -11,17 +11,35 @@ const ensureDatabaseConnection = async () => {
   }
 };
 
-
-const getAll = async (req,res) => {
-  try
-  {
-        await sequelize.authenticate();
+const requestManga = async ( req, res ) =>
+{
+if ( req.method === 'GET' )
+{  
+    try
+    {
+      await sequelize.authenticate();
       const allMangas = await mangaModel.findAll()
-      console.log("voici les mangas dans getAll:",mangaModel)
-      res.send({ result: allMangas })
-  } catch (error) {
-    console.error('Erreur lors de la récupération des mangas', error);
-    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
-  }
-};
-export default getAll
+      console.log( "voici les mangas dans getAll:", mangaModel )
+      res.send( { result: allMangas } )
+    } catch ( error )
+    {
+      console.error( 'Erreur lors de la récupération des mangas', error );
+      res.send( { error: error } ) // Vous pouvez gérer l'erreur en conséquence
+    }
+  
+}
+else if ( req.method === 'POST' )
+{
+
+    await sequelize.authenticate();
+    const newManga = await mangaModel.create(
+      {
+        name: req.body.name,
+        rate: req.body.name,
+        source: req.body.name,
+  
+      }
+    )
+}
+}
+export default requestManga

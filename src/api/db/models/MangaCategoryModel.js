@@ -1,6 +1,6 @@
 // mangaCategoryModel.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../newSequelize');
+const {sequelize} = require('../newSequelize');
 const mangaModel = require( './mangaModel' );
 
 const MangaCategory = sequelize.define('MangaCategory', {
@@ -41,5 +41,4 @@ const MangaCategory = sequelize.define('MangaCategory', {
   tableName: 'MangaCategory', // Définissez le nom de la table ici si nécessaire
   } );
 
-mangaModel.sync();
-module.exports = MangaCategory;
+export default MangaCategory;

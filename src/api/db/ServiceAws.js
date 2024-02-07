@@ -2,20 +2,21 @@
 import * as AWS from "aws-sdk";
 
 
+const AWS_BUCKET=process.env.AWS_BUCKET
 
 export class AwsService {
   constructor() {
     this.s3 = new AWS.S3({
-      region: process.env.local.AWS_REGION,
+      region: process.env.AWS_REGION,
       credentials: {
-        accessKeyId: process.env.local.AWS_ACCESKEY,
-        secretAccessKey: process.env.local.AWS_SECRETACCESKEY,
+        accessKeyId: process.env.AWS_ACCESKEY,
+        secretAccessKey: process.env.AWS_SECRETACCESKEY,
       },
     })
   }
 async uploadFile(name, type, buf) {
   const params = {
-    Bucket: process.env.local.AWS_BUCKET,
+    Bucket:AWS_BUCKET,
     Key: name,
     Body: Buffer.from(buf),
     ContentType: type,
@@ -26,7 +27,7 @@ console.log("les params : ",params)
     const data = await this.s3.upload(params).promise();
 
     return {
-      url: `https://${process.env.local.AWS_BUCKET}.s3.${process.env.local.AWS_REGION}.amazonaws.com/${name}`,
+      url: `https://${AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${name}`,
       data,
     };
   } catch (error) {

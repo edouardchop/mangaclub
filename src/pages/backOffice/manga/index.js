@@ -1,6 +1,6 @@
 import { useState } from "react"
 import axios from 'axios';
-import LineBackOffice from "@/components/LineBackOffice";
+import LineBackOffice from "@/components/LineBackOffice"
 export const getServerSideProps = async ({ params }) => {
 
   const mangaResponse = await axios.get( " http://localhost:3000/api/manga/" )

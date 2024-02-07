@@ -1,6 +1,7 @@
 import categoryModel from "../../../api/db/models/categoryModel";
 import MangaCategory from "../../../api/db/models/MangaCategoryModel";
 import mangaModel from "../../../api/db/models/mangaModel";
+
 const getMangaByCategory = async ( req, res, category ) =>
 {let result=[]
   const nameCategory = await categoryModel.findOne( { where: { name:{category} } } );

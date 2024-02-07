@@ -3,7 +3,8 @@ exports.up = function (knex) {
     table.increments( 'id' ).primary();
     table.string( 'name' ).notNullable();
     table.timestamps( true, true ); 
-    table.integer("rate")
+    table.integer( "rate" )
+    table.string('source')
  
   });
 };
