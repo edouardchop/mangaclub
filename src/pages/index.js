@@ -6,20 +6,20 @@ import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
 import VerticalBar from "@/components/VerticalBar";
-
-export const getServerSideProps = async ({ params }) => {
+import getCategoryByManga from "@/api/function/categoryModel"
+export const getServerSideProps = async ({}) => {
 
   const categoryResponse = await axios.get( "http://localhost:3000/api/category" )
   const { data: categoryData } = categoryResponse
   const mangaResponse = await axios.get( "http://localhost:3000/api/manga" )
   const { data: mangaData } = mangaResponse
-
-
+  const categoryMangaResponse = await axios.get( "http://localhost:3000/api/categoryManga" )
+  const { data: categoryManga } = categoryMangaResponse
   return {
     props: {
       category: categoryData.result,
-      manga: mangaData.result
-
+      manga: mangaData.result,
+      categoryManga:categoryManga.result
     }
   }
 }
@@ -27,11 +27,14 @@ export default function Home (props)
 {
   const categories = props.category
   const mangas = props.manga
+  const categoryMangas = props.categoryManga
+  console.log("la table categoryMangas : ",categoryMangas)
   const [ filteredMangaData, setFilteredMangaData ] = useState(mangas)
   const [ NoManga, setNoManga ] = useState( false )
   const [ textSearch, setTextSearch ] = useState( 0 )
 const [showRightBar,setShowRightBar]=useState(false)
-console.log("voici les catégories : ",categories)
+  console.log( "voici les catégories : ", categories )
+  const [tag1,tag2]=getCategoryByManga(mangas[0],categories,categoryMangas)
   /*
   const handleSearch = ( e ) =>
   {setNoManga(false)
@@ -110,7 +113,7 @@ console.log("voici les catégories : ",categories)
             { filteredMangaData.map( ( manga ) => (
               <div className="mx-2 hover:scale-110" key={ manga.id }>
                 <OneManga { ...manga }>
-                  <Tag onClick={ () => handleTag( manga.tag1 ) } key={ manga.tag1 } tag={ manga.tag1 } />
+                  <Tag onClick={ () => handleTag( manga.tag1 )} key={tag1} tag={tag1} />
                   <Tag onClick={ () => handleTag( manga.tag2 ) } key={ manga.tag2 } tag={ manga.tag2 } />
                 </OneManga> 
              </div>

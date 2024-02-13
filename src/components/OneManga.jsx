@@ -52,7 +52,9 @@ export default function OneManga ( { name, src, rate, children } )
           {name}
         </div>
         <Rating rate={rate} />
-        <div className="flex place-content-center"></div>
+        <div className="flex place-content-center">
+          {children}
+        </div>
       </div>
     </div>
   );

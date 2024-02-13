@@ -1,49 +1,58 @@
-import categoryModel from "../../../api/db/models/categoryModel";
-import MangaCategory from "../../../api/db/models/MangaCategoryModel";
-import mangaModel from "../../../api/db/models/mangaModel";
 
-const getMangaByCategory = async ( req, res, category ) =>
-{let result=[]
-  const nameCategory = await categoryModel.findOne( { where: { name:{category} } } );
-  const allManga = await MangaCategory.findAll( { where: { categoryId: nameCategory.id } } )
-  const allMangaId = allManga.map( manga => manga.mangaId )
-  for ( let i = 0; i < allMangaId.length; i++ )
-  {
-    const manga = await mangaModel.findOne( { where: { id: allMangaId[ i ] } } )
-    const name = manga.name
-    result.push(name)
+import  MangaCategory  from "../../../api/db/models/MangaCategoryModel"   
+const {sequelize} = require( "../../../api/db/newSequelize")
+const ensureDatabaseConnection = async () => {
+  try {
+    console.log( 'Connexion à la base de données établie avec succès.')
+  } catch (error) {
+    console.error('Erreur de connexion à la base de données :', error);
+    throw error;
   }
-  res.send(result)
-}
+};
 
-getCategoryByManga= async ( req, res,manga ) =>
-{let result=[]
-  const nameManga = await mangaModel.findOne( { where: { name:{manga}} } );
-  const getCategory = await MangaCategory.findAll( { where: { mangaId: nameManga.id } } )
-  const getCategoryId = getCategory.map( manga => manga.mangaId )
-  for ( let i = 0; i < getCategoryId.length; i++ )
+
+const getAll = async (req,res) => {
+  try
   {
-    const category = await categoryModel.findOne( { where: { id: getCategoryId[ i ] } } )
-    const name = category.name
-    result.push(name)
+        await sequelize.authenticate();
+      const allMangaCategories = await MangaCategory.findAll()
+      console.log("voici AllMangaCategories :",allMangaCategories)
+      res.send({ result: allMangaCategories })
+  } catch (error) {
+    console.error('Erreur lors de la récupération des catégories', error);
+    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
   }
-  res.send(result)
-}
-export default { getMangaByCategory, getCategoryByManga }
+};
 
 /*
-const getmangaAction = async ( req, res ) =>
-{let result=[]
-  const action = await categoryModel.findOne( { where: { name: 'Action' } } );
-  const mangaAction = await MangaCategory.findAll( { where: { categoryId: action.id } } )
-  const mangaIdAction = mangaAction.map( manga => manga.mangaId )
-  for ( let i = 0; i < mangaIdAction.length; i++ )
-  {
-    const manga = await mangaModel.findOne( { where: { id: mangaIdAction[ i ] } } )
-    const name = manga.name
-    result.push(name)
+const getAll = async (req,res) => {
+  try {
+      const allCategories = await categoryModel.findAll()
+      console.log("voici les categories dans getAll:",categoryModel)
+      res.send({ result: allCategories })
+  } catch (error) {
+    console.error('Erreur lors de la récupération des catégories', error);
+    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
   }
-  res.send(result)
-}
-// Exportez la fonction getAll
-export default getmangaAction*/
+};
+
+
+
+const categoryModel = require('../../../api/db/models/categoryModel');
+const sequelize = require( "../../../api/db/utils/newSequelize" )
+
+const getAll = async (req,res) => {
+  try
+  {
+        await sequelize.authenticate();
+      const allCategories = await categoryModel.findAll()
+      console.log("voici les categories dans getAll:",categoryModel)
+      res.send({ result: allCategories })
+  } catch (error) {
+    console.error('Erreur lors de la récupération des catégories', error);
+    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
+  }
+};
+*/
+export default getAll
+//export default ensureDatabaseConnection
