@@ -27,7 +27,7 @@ console.log("les params : ",params)
     const data = await this.s3.upload(params).promise();
 
     return {
-      url: `https://${AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${name}`,
+      url: `https://${AWS_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/blacklagoon}`,
       data,
     };
   } catch (error) {
@@ -40,7 +40,7 @@ console.log("les params : ",params)
   {
     console.log("on est dans getFileStream")
     const params = {
-      Bucket: process.env.local.AWS_BUCKET,
+      Bucket:AWS_BUCKET,
       Key: fileKey
     }
 
@@ -50,7 +50,7 @@ console.log("les params : ",params)
 
       return {
         file: data.Body,
-        url: `https://${ process.env.local.AWS_BUCKET }.s3.${ process.env.local.AWS_REGION }.amazonaws.com/${ fileKey }`
+        url: `https://${ process.env.AWS_BUCKET }.s3.${ process.env.AWS_REGION }.amazonaws.com/${ fileKey }`
       }
     } catch (error) {
       return "Error retrieving file:", error

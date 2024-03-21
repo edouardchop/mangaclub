@@ -1,8 +1,8 @@
 import Rating from './Rating'
 import Image from 'next/image'
-
-
-
+import Tag from"./Tag"
+import getCategoryByManga from "@/api/function/categoryModel"
+import { useEffect } from 'react'
 export async function getServerSideProps() {
   try {
     const fileKey = { name }
@@ -16,9 +16,12 @@ export async function getServerSideProps() {
 
     const base64 = Buffer.from(response.data, 'binary').toString('base64');
 
+    const categoryMangaResponse = await axios.get( "http://localhost:3000/api/categoryManga" )
+    const { data: categoryManga } = categoryMangaResponse
     return {
       props: {
         src: base64,
+        categoryManga: categoryManga.result,
       },
     };
   } catch (error) {
@@ -30,19 +33,25 @@ export async function getServerSideProps() {
       },
     };
   }
+  
 }
 
-
-export default function OneManga ( { name, src, rate, children } )
+export default function OneManga (props)
 {
-  
+  const name = props.name
+  const src = props.src
+  const rate = props.rate
+  const tag1 = props.tag1
+  const tag2 = props.tag2
+  const onClick = props.onClick
+
   
   return (
     <div className="w-40 md:w-48 mb-2 ">
       <div className="border-2 h-56 md:h-64 overflow-hidden border-black">
         <Image
-          alt="Picture of the author"
-          src={`data:image/jpeg;base64,${src}`}
+          alt="Image of Manga"
+          src={ src }
           width={ 200 }
           height={100}
         />
@@ -53,7 +62,8 @@ export default function OneManga ( { name, src, rate, children } )
         </div>
         <Rating rate={rate} />
         <div className="flex place-content-center">
-          {children}
+          <Tag onClick={ onClick } key={tag1} tag={tag1} />
+          <Tag onClick={ onClick } key={tag2} tag={tag2} />
         </div>
       </div>
     </div>

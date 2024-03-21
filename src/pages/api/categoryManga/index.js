@@ -16,7 +16,6 @@ const getAll = async (req,res) => {
   {
         await sequelize.authenticate();
       const allMangaCategories = await MangaCategory.findAll()
-      console.log("voici AllMangaCategories :",allMangaCategories)
       res.send({ result: allMangaCategories })
   } catch (error) {
     console.error('Erreur lors de la récupération des catégories', error);

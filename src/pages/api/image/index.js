@@ -2,7 +2,7 @@
 import { AwsService } from '../../../api/db/ServiceAws';
 
 
-export default async function handler ( req, res)
+export default async function handler (req, res)
 { const aws = new AwsService();
   if ( req.method == "GET" )
   {
@@ -24,9 +24,9 @@ export default async function handler ( req, res)
   {
     try
     { 
-                const name=req.body.name
-                const type=req.body.type
-                const buf=req.body.buf
+    const name=req.body.name
+    const type=req.body.type
+    const buf=req.body.buf
 console.log(req.body.type)
       const imageData = await aws.uploadFile( name, type, buf )
      res.send("succès")

@@ -1,8 +1,10 @@
 import mangaModel from '../../../api/db/models/mangaModel';
+import { AwsService } from '../../../api/db/ServiceAws';
 const {sequelize} = require('../../../api/db/newSequelize')
 
 const ensureDatabaseConnection = async () => {
-  try {
+  try
+  {
     await sequelize.authenticate();
     console.log( 'Connexion à la base de données établie avec succès.')
   } catch (error) {
@@ -17,9 +19,9 @@ if ( req.method === 'GET' )
 {  
     try
     {
+      const data = [];
       await sequelize.authenticate();
       const allMangas = await mangaModel.findAll()
-      console.log( "voici les mangas dans getAll:", mangaModel )
       res.send( { result: allMangas } )
     } catch ( error )
     {
@@ -35,9 +37,8 @@ else if ( req.method === 'POST' )
     const newManga = await mangaModel.create(
       {
         name: req.body.name,
-        rate: req.body.name,
-        source: req.body.name,
-  
+        source: req.body.source,
+        rate: req.body.rate,  
       }
     )
 }

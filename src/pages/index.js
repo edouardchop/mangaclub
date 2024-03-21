@@ -7,34 +7,74 @@ import Filter from "@/components/Filter";
 import Search from "@/components/Search";
 import VerticalBar from "@/components/VerticalBar";
 import getCategoryByManga from "@/api/function/categoryModel"
-export const getServerSideProps = async ({}) => {
+import MangaCategory from "./backOffice/manga";
+import { AwsService } from "@/api/db/ServiceAws";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
-  const categoryResponse = await axios.get( "http://localhost:3000/api/category" )
-  const { data: categoryData } = categoryResponse
-  const mangaResponse = await axios.get( "http://localhost:3000/api/manga" )
-  const { data: mangaData } = mangaResponse
-  const categoryMangaResponse = await axios.get( "http://localhost:3000/api/categoryManga" )
-  const { data: categoryManga } = categoryMangaResponse
-  return {
-    props: {
-      category: categoryData.result,
-      manga: mangaData.result,
-      categoryManga:categoryManga.result
-    }
-  }
-}
-export default function Home (props)
+export const getServerSideProps = async () =>
 {
-  const categories = props.category
-  const mangas = props.manga
-  const categoryMangas = props.categoryManga
-  console.log("la table categoryMangas : ",categoryMangas)
-  const [ filteredMangaData, setFilteredMangaData ] = useState(mangas)
-  const [ NoManga, setNoManga ] = useState( false )
-  const [ textSearch, setTextSearch ] = useState( 0 )
+  try
+  {
+    const allImages=[]
+    const categoryResponse = await axios.get("http://localhost:3000/api/category");
+    const { data: categoryData } = categoryResponse
+    const mangaResponse = await axios.get("http://localhost:3000/api/manga");
+    const { data: mangaData } = mangaResponse
+    console.log( "manga response :", mangaData )
+      const aws = new AwsService();
+    for ( let i = 0; i < mangaData.result.length; i++ )
+    {
+      try
+      {
+        const lowerManga = mangaData.result[ i ].name.toLowerCase();
+        const mangaName = lowerManga.replace( /\s+/g, '' );
+        allImages.push(mangaName)
+        const imageData = await aws.getFileStream( mangaName );
+        console.log( "imageData :", imageData.file )
+        console.log( "LA SOURCE : ", mangaData.result[ i ] )
+
+
+      }
+      catch ( error )
+      {
+        console.log("error")
+      }
+      }
+
+    const categoryMangaResponse = await axios.get("http://localhost:3000/api/categoryManga");
+    const { data: categoryManga } = categoryMangaResponse
+
+    return {
+      props: {
+        category: categoryData.result,
+        manga: mangaData.result,
+        categoryManga: categoryManga.result,
+        image:allImages,
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+    return {
+      props: {
+        category: [],
+        manga: [],
+        categoryManga: [],
+        image:[],
+      }
+    };
+  }
+};
+
+export default function Home ( props )
+{
+  const router = useRouter()
+  const { category, manga, categoryManga,image } = props
+  const [ filteredMangaData, setFilteredMangaData ] = useState( manga );
+  const [NoManga, setNoManga] = useState(false);
+  const [textSearch, setTextSearch] = useState("");
 const [showRightBar,setShowRightBar]=useState(false)
-  console.log( "voici les catégories : ", categories )
-  const [tag1,tag2]=getCategoryByManga(mangas[0],categories,categoryMangas)
+
   /*
   const handleSearch = ( e ) =>
   {setNoManga(false)
@@ -46,6 +86,7 @@ const [showRightBar,setShowRightBar]=useState(false)
     }
   }
   */
+
   const handleInputChange = ( e ) =>
   {setNoManga(false)
  
@@ -61,7 +102,7 @@ const [showRightBar,setShowRightBar]=useState(false)
     const handleSearchPartial = ( e ) =>
     {
     setNoManga( false )
-      const searchData = categories.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value )
+      const searchData = category.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value )
       setFilteredMangaData( searchData )
       setTextSearch(e.target.value)
 
@@ -73,11 +114,18 @@ const [showRightBar,setShowRightBar]=useState(false)
     }
 
     const handleTag = (element) =>
-  {setNoManga( false )
-    const searchData = mangas.filter( ( manga ) => element === manga.tag1|| element === manga.tag2)
-      setFilteredMangaData( searchData )
+    {
+      setNoManga( false )
+      console.log( "mangas :", manga )
+      console.log( "element : ", element )
+      console.log( "categories ;", category )
+      const categorySearch = category.filter( item => item.name == element )
+      console.log( "lalalal :", categorySearch )
+      const transTab = categoryManga.filter( mix => mix.categoryId == categorySearch.id )
+            console.log( "lalalal :", transTab )
+
       setTextSearch( element )
-      if ( searchData.length == 0 )
+      if ( manga.length == 0 )
     {
       setNoManga(true)
     }
@@ -86,7 +134,7 @@ const [showRightBar,setShowRightBar]=useState(false)
   }
   const filterAllManga = () =>
   {
-    setFilteredMangaData( categories )
+    setFilteredMangaData( category )
     setTextSearch( "Tout les mangas" )
     setNoManga(false)
     
@@ -110,16 +158,16 @@ const [showRightBar,setShowRightBar]=useState(false)
     <div>
         { !NoManga &&
           <div className="flex flex-wrap justify-center md:justify-start pt-24">
-            { filteredMangaData.map( ( manga ) => (
+           {filteredMangaData.map((manga,index) => {
+             const [ tag1, tag2 ] = getCategoryByManga( manga, category, categoryManga );
+            return (
               <div className="mx-2 hover:scale-110" key={ manga.id }>
-                <OneManga { ...manga }>
-                  <Tag onClick={ () => handleTag( manga.tag1 )} key={tag1} tag={tag1} />
-                  <Tag onClick={ () => handleTag( manga.tag2 ) } key={ manga.tag2 } tag={ manga.tag2 } />
-                </OneManga> 
-             </div>
-                                                  )
-                                    )
-            }
+                <div type="button" onClick={() => router.push(`mangas/${manga.name}`)}>
+                <OneManga src={ `https://mangaclubimage.s3.eu-north-1.amazonaws.com/${image[index]}` } { ...manga } onClick={()=> handleTag(tag1,tag2) } tag1={tag1} tag2={tag2} />
+                </div>
+              </div>
+                  )
+            })}
           </div> }
         { NoManga && <div className="text-center pt-36 text-2xl font-bold">No Manga Found</div> }
      </div>

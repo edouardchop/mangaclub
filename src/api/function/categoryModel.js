@@ -16,19 +16,16 @@ const getMangaByCategory = async( manga,categories,categoryManga ) =>
 
 export default getMangaByCategory
 */
-const getCategoryByManga= async (manga,categories,categoryManga ) =>
+ const  getCategoryByManga=  (manga,categories,categoryManga ) =>
 {
     let categoryTab = []
-    console.log("manga : ",manga)
-    const categoryMangaId = categoryManga.filter( categoryManga => categoryManga.mangaId == manga.id )
-    console.log( "la categorie recherché : ", categoryMangaId )
+    const categoryMangaId =  categoryManga.filter( one => one.mangaId == manga.id )
     for ( let i = 0; i < categoryMangaId.length; i++ )
     {
         const idCategory = categories.filter( category => category.id == categoryMangaId[ i ].categoryId )
         const resulCategory = idCategory[0].name
         categoryTab.push(resulCategory)
     }
-    console.log( "la categorie recherché 2 : ", categoryTab )
     return[categoryTab[0],categoryTab[1] ]
 
 }
