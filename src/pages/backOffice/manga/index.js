@@ -1,34 +1,42 @@
 import { useState } from "react"
 import axios from 'axios';
 import LineBackOffice from "@/components/LineBackOffice"
-import SourceImage from "@/components/SourceImage";
-export const getServerSideProps = async ({ params }) => {
+import Navbar from "@/components/Navbar";
 
-  const mangaResponse = await axios.get( " http://localhost:3000/api/manga/" )
-  const { data: mangaData } = mangaResponse
-  return ({
-    props: {
-    manga: mangaData.result,
+export const getServerSideProps = async ( { params } ) =>
+{
+  try
+  {
+    const mangaResponse = await axios.get( " http://localhost:3000/api/manga/" )
+    const { data: mangaData } = mangaResponse
+    return ( {
+      props: {
+        manga: mangaData.result,
 
+      }
     }
+    )
+  }
+  catch ( error )
+  {
+    console.error( 'Error fetching image:', error.message );
+
+  }
 }
-  )
-}
 
 
-
-export default function MangaCategory (props)
+export default function Manga (props)
 {
 
   const mangas = props.manga
-const allManga=mangas.map(manga=>[manga.id,manga.name])
+const allManga=mangas.map(manga=>[manga.id,manga.name,manga.source])
 const [ lines, setLines ] = useState( allManga )
-const [ incrementId, setIncrementId ] = useState( allManga.length + 1 )
 const [addField,setAddField] = useState(false)
 const [inputValue, setInputValue] = useState('');
 const [selectedFile, setSelectedFile] = useState(null);
   const [ newText, setNewText ] = useState( "" )
-  const [newName,setNewName]=useState("")
+  const [ newName, setNewName ] = useState( "" )
+  
     const handleFileChange = ( event ) =>
     {
         console.log("change")
@@ -37,7 +45,7 @@ const [selectedFile, setSelectedFile] = useState(null);
         console.log(file)
   };
 
-  
+  console.log("lines : ",lines)
 const uploadImage = () => {
     if ( selectedFile )
     {
@@ -46,7 +54,6 @@ const uploadImage = () => {
         {
             const content = event.target.result.split( ',' )[ 1 ];
             const bufParam = Buffer.from( content.replace( /^data:image\/\w+;base64,/, "" ), 'base64' )
-          setNewName(newText.replace( /\s/g, "" ))
             const params = {
                 name:newText.replace( /\s/g, "" ),
                 type:selectedFile.type,
@@ -68,20 +75,7 @@ const uploadImage = () => {
       reader.readAsDataURL(selectedFile);
   } else { console.log( "pas de fichier" ) }
 }
-  const addOneLine = () =>
-  {setAddField(true)
-    setIncrementId(incrementId + 1 )
-    const newLine = {
-      id: incrementId,
-      name: ""
 
-    }
-
-    const thisLine=[newLine.id,newLine.name]
-    setLines( [ ...lines,thisLine ]);
-    console.log( "voici la nouvelle ligne : ", thisLine )  
-  }
-   
   const deleteLine = ( line ) =>
   {
     const newLines = lines.filter( otherLine => otherLine[ 0]!= line[0] )
@@ -104,29 +98,38 @@ const uploadImage = () => {
   {
     setInputValue( event.target.value )
     setNewText(event.target.value )
-    console.log("handle nes name :",newText)
   }
   
 
   const sendMangaData = async () =>
   {
 
-    console.log("newText :", newText)
+    try
+    {
+      if ( selectedFile )
+      {
+        const mangaResponse = await axios.post( 'http://localhost:3000/api/manga/', {
+          name: newText,
+          source: newText.replace( /\s/g, "" ),
+          rate: 0
+        } )
+      }else{console.log("ca ne marche pas!")}
+    } catch ( error )
+    {
+      console.error( 'Erreur lors de la récupération des données:', error )
+      throw error
+    }
+  }
+
+      const getMangaData = async () =>
+  {
     try
     {
 
-      const mangaResponse = await axios.post( 'http://localhost:3000/api/manga/', {
-        name:newText,
-        source:newName,
-        rate: 0
-      } )
+      const mangaResponse = await axios.get( 'http://localhost:3000/api/manga/')
       const mangaData = mangaResponse.data.result
-    
-      return {
-        props: {
-          manga: mangaData
-        }
-      }
+      const newMangas=mangaData.map(manga=>[manga.id,manga.name,manga.source])
+      setLines(newMangas)
     } catch ( error )
     {
       console.error( 'Erreur lors de la récupération des données:', error )
@@ -135,10 +138,11 @@ const uploadImage = () => {
   }
 return (
 
-    <>
-        <div className="flex justify-center">
-    <h1>BackOffice Manga</h1>
-            <buton className="ps-64 " onClick={ addOneLine }>add</buton>  
+  <>
+    <Navbar/>
+        <div className="flex flex-col items-center">
+    <h1 className="text-3xl pt-8">BackOffice Manga</h1>
+    <buton className="bg-yellow-500 hover:bg-yellow-400 text-white font-bold py-2 px-4 border-b-4 border-yellow-700 hover:border-yellow-500 rounded mt-12 mb-8" onClick={()=> setAddField(true)}>add</buton>  
     </div>
       <table className="w-full border">
       <thead>
@@ -155,12 +159,14 @@ return (
         { addField &&<tr>
         <th className="p-4"></th>
         <th className="p-4"><input type="text" value={ inputValue } onChange={handleNewName} placeholder="Saisir le nom" /></th>
-        <th className="p-4"><SourceImage onChange={(e)=>handleFileChange(e) } onClick={uploadImage}/></th>
-          <th><button className="bg-blue-500 text-white px-4 py-2"onClick={sendMangaData}>add</button></th>
+          <th className="p-4"><input type="file" id="fileInput" onChange={ ( e ) => handleFileChange( e ) } name="fileInput" accept="image/jpeg, image/png" className="border border-gray-300 p-2"/></th>
+          <th><button className="bg-yellow-500 hover:bg-yellow-400 text-white font-bold py-2 px-4 border-b-4 border-yellow-700 hover:border-yellow-500 rounded" onClick={ () => { sendMangaData(); uploadImage(); setAddField( false ); setInputValue( "" ); getMangaData() } }>add</button>
+            <button className="bg-yellow-500 hover:bg-yellow-400 text-white font-bold py-2 px-4 border-b-4 border-yellow-700 hover:border-yellow-500 rounded ms-4" onClick={ () => {setAddField( false ); setInputValue( "" ) } }>X</button>
+          </th>
           </tr>
         }
         { lines.map( (line ) =>
-          <LineBackOffice changeFile={e=>handleFileChange(e) } uploadFile={ uploadImage} id={ line[ 0 ] } name={ line[ 1 ] } source={mangas.Source} key={ line[ 0 ] } Delete={ () => deleteLine( line ) } >
+          <LineBackOffice changeFile={e=>handleFileChange(e) } id={ line[ 0 ] } name={ line[ 1 ] }  source={line[2]} key={ line[ 0 ] } Delete={ () => deleteLine( line ) } >
             <input onChange={ ( e ) => changeName( line,e ) } type="text" value={ line[ 1 ] } />
           </LineBackOffice>
 )} 

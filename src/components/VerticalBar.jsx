@@ -5,18 +5,14 @@ import Image from 'next/image'
 
 
 
-export default function VerticalBar ({onClick,children}) {
+export default function VerticalBar ({onClick,ref}) {
   return (
 
 
-      <aside className="flex-col w-full md:w-80 fixed right-0 top-0 h-screen" style={ { backgroundColor: '#D7C412' } }>
+    <aside ref={ ref } className="flex-col w-full md:w-80 fixed right-0 top-0 h-screen" style={ { backgroundColor: '#D7C412' } }>
   
         <div className="flex">
-        <Image
-    src={logo}
-    width={250}
-    alt="Picture of the author"
-        />
+
         <button onClick={ onClick } className="pb-7 md:ps-4 ps-12 pt-3">
           <FaWindowClose size={ 70 }/></button>
       </div>

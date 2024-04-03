@@ -20,7 +20,7 @@ const Navbar = ({onClick}) =>
     alt="Picture of the author"
           />
           </Link>
-        <div className="ms-72 hidden md:block">
+        <div className=" hidden md:block">
         <GoldButton url="/myspace" text="Mon Espace"/>
         <GoldButton url="creation" text="Creation"/>
           <GoldButton url="creeruncompte" text="Créer un compte" />

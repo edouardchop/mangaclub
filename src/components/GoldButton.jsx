@@ -6,7 +6,7 @@ export default function GoldButton ( { text, url } )
     }
     
     return (
-        <Link href={ url } className=" py-4 px-2 font-bold mx-6" style={ { backgroundColor: '#D7C412' } }>{text}</Link>
+        <Link href={ url } className="mx-6 bg-yellow-500 hover:bg-yellow-400 text-white font-bold py-2 px-4 border-b-4 border-yellow-700 hover:border-yellow-500 rounded">{ text }</Link>
     )
 
 }

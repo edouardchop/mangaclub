@@ -1,5 +1,4 @@
 import mangaModel from '../../../api/db/models/mangaModel';
-import { AwsService } from '../../../api/db/ServiceAws';
 const {sequelize} = require('../../../api/db/newSequelize')
 
 const ensureDatabaseConnection = async () => {
@@ -15,11 +14,10 @@ const ensureDatabaseConnection = async () => {
 
 const requestManga = async ( req, res ) =>
 {
-if ( req.method === 'GET' )
-{  
+  if ( req.method === 'GET' )
+  {
     try
     {
-      const data = [];
       await sequelize.authenticate();
       const allMangas = await mangaModel.findAll()
       res.send( { result: allMangas } )
@@ -29,18 +27,21 @@ if ( req.method === 'GET' )
       res.send( { error: error } ) // Vous pouvez gérer l'erreur en conséquence
     }
   
-}
-else if ( req.method === 'POST' )
-{
-
-    await sequelize.authenticate();
-    const newManga = await mangaModel.create(
-      {
-        name: req.body.name,
-        source: req.body.source,
-        rate: req.body.rate,  
-      }
-    )
+  }
+  else if ( req.method === 'POST' )
+  {
+    try
+    {
+      await sequelize.authenticate();
+      const newManga = await mangaModel.create(
+        {
+          name: req.body.name,
+          source: req.body.source,
+          rate: req.body.rate,
+        }
+      )
+    }
+    catch(error){res.send({error:error})}
 }
 }
 export default requestManga

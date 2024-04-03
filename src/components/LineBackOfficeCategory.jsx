@@ -1,7 +1,5 @@
 import { useState } from "react"
-import ModifyDelete from "./ModifyDelete"
-import SourceImage from "./SourceImage"
-export default function LineBackOffice ({id,name,Delete,changeFile,children,source})
+export default function LineBackOfficeCategory ({id,name,Delete,children})
 {
 
   const [ modify, setModify ] = useState( false )
@@ -13,9 +11,9 @@ export default function LineBackOffice ({id,name,Delete,changeFile,children,sour
             <tr key={id} className="border-b text-center">
             <td className="p-4">{ id }</td>
             <td className="p-4">{ name}</td>
-            <td className="p-4">{source}</td>
             <td className="p-4">
-              <ModifyDelete Modify={ () => setModify( !modify ) } Delete={ Delete } />
+    <button className="bg-green-500 text-white px-4 py-2 mr-2" onClick={ () => setModify( !modify ) }>Modifier</button>
+    <button className="bg-red-500 text-white px-4 py-2" onClick={Delete}>Supprimer</button>
             </td>
           </tr>
             }
@@ -23,11 +21,9 @@ export default function LineBackOffice ({id,name,Delete,changeFile,children,sour
                 <tr key={id} className="border-b text-center">
                 <td className="p-4">{ id }</td>
                 <td className="p-4">{ children }</td>
-                <td className="ps-32 w-48">
-              <SourceImage onChange={ changeFile }/>
-                </td>
             <td className="p-4">
-              <ModifyDelete Modify={ () => setModify( !modify ) } Delete={ Delete } />
+    <button className="bg-blue-500 text-white px-4 py-2 mr-2" onClick={ () => setModify( !modify ) }>Sauvegarder</button>
+    <button className="bg-red-500 text-white px-4 py-2" onClick={Delete}>Supprimer</button>
             </td>
           </tr>
             }

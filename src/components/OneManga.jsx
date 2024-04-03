@@ -3,38 +3,7 @@ import Image from 'next/image'
 import Tag from"./Tag"
 import getCategoryByManga from "@/api/function/categoryModel"
 import { useEffect } from 'react'
-export async function getServerSideProps() {
-  try {
-    const fileKey = { name }
-    console.log( "voici le name :", fileKey );
 
-    const response = await axios.get( `http://localhost:3000/api/image?Key=${ fileKey }`, {
-      responseType: 'arraybuffer',
-    }) //
-
-    console.log("Requête vers image faite");
-
-    const base64 = Buffer.from(response.data, 'binary').toString('base64');
-
-    const categoryMangaResponse = await axios.get( "http://localhost:3000/api/categoryManga" )
-    const { data: categoryManga } = categoryMangaResponse
-    return {
-      props: {
-        src: base64,
-        categoryManga: categoryManga.result,
-      },
-    };
-  } catch (error) {
-    console.error('Error fetching image:', error.message);
-
-    return {
-      props: {
-        src: null,
-      },
-    };
-  }
-  
-}
 
 export default function OneManga (props)
 {
