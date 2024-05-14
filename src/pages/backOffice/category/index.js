@@ -44,11 +44,14 @@ const [addField,setAddField] = useState(false)
 
   }
    
-  const deleteLine = ( line ) =>
+  const deleteLine =async ( line ) =>
   {
+    console.log("supression")
     const newLines = lines.filter( otherLine => otherLine[ 0]!= line[0] )
     setLines( newLines ) 
-    const deleteLineData=axios.delete(`http://localhost:3000/api/mangaCategories/categoryToManga/${line[0]}`)
+    const deleteLineData = await axios.delete( `http://localhost:3000/api/category/${ line[ 0 ] }` )
+    const responseDelete = deleteLineData
+    console.log(responseDelete)
   }
   
   const handleNameInBox = async ( event ) =>

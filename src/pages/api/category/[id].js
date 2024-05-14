@@ -1,36 +1,37 @@
-const { sequelize } = require( "../../../api/db/newSequelize" )
-import  MangaCategory from '../../../api/db/models/MangaCategoryModel'
-import  Manga  from '../../../api/db/models/mangaModel'
+const { sequelize } = require( "@/api/db/newSequelize" )
+import Category   from '@/api/db/models/categoryModel'
 
 
-/* On affiche les MANGAS associés à chaque catégories*/
-async function handler ( req, res )
+
+const handler = async ( req, res ) =>
 {
-  const categoryId = req.query.id 
-  if ( req.method === 'GET' )
-  {
-    try
+    if ( req.method === 'GET' )
     {
-      const mangaCategories = await MangaCategory.findAll( {
-        where: {
-          categoryId: categoryId
+        const categoryId = req.query.id
+        try
+        {
+            await sequelize.authenticate();
+            const manga = await Category.findByPk(categoryId);
+            res.send( { result: manga } )
+        } catch ( error )
+        {
+            console.error( 'Erreur lors de la récupération de la catégorie', error )
+            res.send( { error: error } ) 
         }
-      } )
-      const mangaIds = mangaCategories.map( category => category.mangaId );
-      console.log( "mangaIds", mangaIds )
-      const mangas = await Manga.findAll( {
-        where: {
-          id: mangaIds
-        }
-      } );
-      res.status( 200 ).json( mangas );
-    } catch ( error )
-    {
-      console.error( error );
-      res.status( 500 ).json( { message: "Une erreur s'est produite lors de la récupération des category." } );
+  
     }
-  }
+    if ( req.method === 'DELETE' )
+    {
+    await sequelize.authenticate();
+        try
+        {
+        const deleteCategory = await Category.destroy( { where: { id: req.query.id, }, } )
+         }
+        catch ( error )
+        {
+            console.error( "Erreur lors de la suppresion du manga" )
+            res.send( { error: error } )
+        }
+    }
 }
-
-    
 export default handler

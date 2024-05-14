@@ -44,24 +44,24 @@ export default function Home ( props )
 {
   const router = useRouter()
   const { category, manga, categoryManga } = props
-  const [ filteredMangaData, setFilteredMangaData ] = useState( manga );
+  console.log("1 : ",manga)
+  const [ filteredMangaData, setFilteredMangaData ] = useState( manga )
 const [NoManga, setNoManga] = useState(false);
 const [textSearch, setTextSearch] = useState("");
 const [showRightBar,setShowRightBar]=useState(false)
 
-
     const handleSearchPartial = async( e ) =>
     {
       setNoManga( false )
-      const categoryValue = category.filter( item => item.name.toLowerCase() === e.target.value.toLowerCase() );
-      console.log( "voici la value : ", categoryValue)
+      const categoryValue = category.filter( item => item.name.toLowerCase() === e.target.value.toLowerCase() )
       if ( categoryValue.length != 0 )
       {
       try
       {
-        const categoryResponse = await axios.get( `http://localhost:3000/api/category/${categoryValue[0].id}` );
+        const categoryResponse = await axios.get( `http://localhost:3000/api/mangaCategories/categoryToManga/${categoryValue[0].id}` );
         const newData = categoryResponse
         setFilteredMangaData( newData.data )
+        console.log("2 :",newData.data)
       }
       catch(error){console.log("il y a eu une erreur lors de la récupération de la catégorie :",error)}
       } 
@@ -73,11 +73,11 @@ const [showRightBar,setShowRightBar]=useState(false)
   
   
     const handleTag = async (element) =>
-    {
+    {console.log("handletag")
       const categorySearch = category.filter( item => item.name == element.toLowerCase() )
       if ( categorySearch.length != 0 )
       {
-        const categoryResponse = await axios.get( `http://localhost:3000/api/category/${ categorySearch[ 0 ].id }` );
+        const categoryResponse = await axios.get( `http://localhost:3000/api/mangaCategories/categoryToManga/${ categorySearch[ 0 ].id }` )
         const newData = categoryResponse
         setFilteredMangaData( newData.data )
         setNoManga( false )
@@ -98,19 +98,20 @@ const [showRightBar,setShowRightBar]=useState(false)
 
   const handleSearchFilter = async ( e )=>{
     setNoManga( false )
-    console.log("result : ",e.target.value)
     const idValue = e.target.value
   
       try
       {
-        const categoryResponse = await axios.get( `http://localhost:3000/api/category/${ idValue }` );
+        console.log("handleSearchFilter")
+        const categoryResponse = await axios.get( `http://localhost:3000/api/mangaCategories/categoryToManga/${ idValue }` )
         const newData = categoryResponse
+        setFilteredMangaData( newData.data )
         if ( newData.length == 0 )
         {
           setNoManga( true )
         } else
         {
-          setFilteredMangaData( newData.data )
+          console.log( "newdata : ",newData.data )
         }
       }
       catch ( error ) { console.log( "il y a eu une erreur lors de la récupération de la catégorie :", error ) }
