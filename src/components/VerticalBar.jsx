@@ -5,11 +5,11 @@ import Image from 'next/image'
 
 
 
-export default function VerticalBar ({onClick,ref}) {
+export default function VerticalBar ({onClick}) {
   return (
 
 
-    <aside ref={ ref } className="flex-col w-full md:w-80 fixed right-0 top-0 h-screen" style={ { backgroundColor: '#D7C412' } }>
+    <aside className="flex-col w-full md:w-80 fixed right-0 top-0 h-screen" style={ { backgroundColor: '#D7C412' } }>
   
         <div className="flex">
 
@@ -17,9 +17,11 @@ export default function VerticalBar ({onClick,ref}) {
           <FaWindowClose size={ 70 }/></button>
       </div>
       <div className="flex flex-col">
-          <Link href="/favoris"className="border-2 p-7 text-center">Vos favoris</Link>
-          <Link href="/signin"className="border-2 p-7 text-center">Inscription</Link>
+        <Link href="/favoris"className="border-2 p-7 text-center">Vos favoris</Link>
+        <Link href="/signin"className="border-2 p-7 text-center">Inscription</Link>
         <Link href="/signup" className="border-2 p-7 text-center">Connexion</Link>
+        <Link href="/backOffice/manga" className="border-2 p-7 text-center">BackOffice manga</Link>
+        <Link href="/backOffice/category" className="border-2 p-7 text-center">BackOffice category</Link>
         </div>
       </aside>
 

@@ -16,6 +16,7 @@ export default function OneManga (props)
 
   
   return (
+
     <div className="w-40 md:w-48 mb-2 ">
       <div className="border-2 h-56 md:h-64 overflow-hidden border-black">
         <Image
@@ -31,8 +32,8 @@ export default function OneManga (props)
         </div>
         <Rating rate={rate} />
         <div className="flex place-content-center">
-          <Tag onClick={ onClick } key={tag1} tag={tag1} />
-          <Tag onClick={ onClick } key={tag2} tag={tag2} />
+          <Tag onClick={ onClick } key={name+"  "+tag1+"1"} tag={tag1} />
+          <Tag onClick={ onClick } key={name+" "+tag2+"2"} tag={tag2} />
         </div>
       </div>
     </div>

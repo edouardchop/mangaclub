@@ -1,8 +1,8 @@
 import { useState } from "react"
 import axios from 'axios';
 import LineBackOfficeCategory from "@/components/LineBackOfficeCategory"
-
-
+import Navbar from "@/components/Navbar";
+import VerticalBar from "@/components/VerticalBar";
 export const getServerSideProps = async ({ params }) => {
 
   const categoryResponse = await axios.get( " http://localhost:3000/api/category/" )
@@ -28,8 +28,8 @@ const [ incrementId, setIncrementId ] = useState( allCategory.length + 1 )
 const [addField,setAddField] = useState(false)
   const [ inputValue, setInputValue ] = useState( '' );
   const [ newText, setNewText ] = useState( "" )
-  const [ newName, setNewName ] = useState( "" )
-  
+  const [showRightBar,setShowRightBar]=useState(false)
+
     const handleFileChange = ( event ) =>
     {
         console.log("change")
@@ -47,7 +47,8 @@ const [addField,setAddField] = useState(false)
   const deleteLine = ( line ) =>
   {
     const newLines = lines.filter( otherLine => otherLine[ 0]!= line[0] )
-   setLines(newLines) 
+    setLines( newLines ) 
+    const deleteLineData=axios.delete(`http://localhost:3000/api/mangaCategories/categoryToManga/${line[0]}`)
   }
   
   const handleNameInBox = async ( event ) =>
@@ -64,6 +65,7 @@ const [addField,setAddField] = useState(false)
       const categoryResponse = await axios.post( 'http://localhost:3000/api/category/', {
         name:newText,
       } )
+      console.log( categoryResponse)
       getCategoryData()
     } catch ( error )
     {
@@ -91,9 +93,11 @@ setLines(newCategories)
 return (
 
     <>
-        <div className="flex justify-center">
-    <h1>BackOffice Category</h1>
-            <buton className="ps-64 " onClick={ addCategory }>add</buton>  
+    <Navbar onClick={ () => setShowRightBar( !showRightBar ) } /> 
+    { showRightBar &&<VerticalBar onClick={ () => setShowRightBar( !showRightBar ) } />}
+    <div className="flex flex-col items-center">
+    <h1 className="text-3xl pt-8">BackOffice Category</h1>
+      <buton className="bg-yellow-500 hover:bg-yellow-400 text-white font-bold py-2 px-4 border-b-4 border-yellow-700 hover:border-yellow-500 rounded mt-12 mb-8" onClick={ addCategory }>add</buton>  
     </div>
       <table className="w-full border">
       <thead>
@@ -107,7 +111,12 @@ return (
         { addField &&<tr>
         <th className="p-4"></th>
         <th className="p-4"><input type="text" value={ inputValue } onChange={handleNameInBox} placeholder="Saisir le nom" /></th>
-          <th><button className="bg-blue-500 text-white px-4 py-2" onClick={ () => { sendCategoryData(); setAddField( false ); setInputValue( "" ); getCategoryData()} }>add</button></th>
+          <th>
+            <div className="flex justify-center">
+              <button className="bg-blue-500 text-white px-4 py-2" onClick={ () => { sendCategoryData(); setAddField( false ); setInputValue( "" ); getCategoryData() } }>add</button>
+              <button className="bg-red-500 text-white px-4 py-2 ms-4" onClick={ () => { setAddField( false ); setInputValue( "" ) } }>X</button>
+            </div>
+          </th>
           </tr>
         }
         {lines.map( (line ) =>

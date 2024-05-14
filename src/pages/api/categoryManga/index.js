@@ -8,20 +8,38 @@ const ensureDatabaseConnection = async () => {
     console.error('Erreur de connexion à la base de données :', error);
     throw error;
   }
-};
+}
 
-
-const getAll = async (req,res) => {
+/* donne les mangas associé à chaque catégorie*/
+const handler=async(req,res)=>{
+if ( req.method === 'GET' )
+{
   try
   {
-        await sequelize.authenticate();
-      const allMangaCategories = await MangaCategory.findAll()
-      res.send({ result: allMangaCategories })
+    await sequelize.authenticate();
+    const allMangaCategories = await MangaCategory.findAll()
+    res.send({ result: allMangaCategories })
   } catch (error) {
     console.error('Erreur lors de la récupération des catégories', error);
     res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
   }
-};
+}/*
+if ( req.method === 'POST' )
+{
+  try
+  {
+    await sequelize.authenticate();
+    const newCategory = await MangaCategory.create(
+      {
+        manga_id: req.body.name,
+        category_id:req.body.category,
+      }
+    )
+  }
+    catch ( error )
+  {res.send( { error: error } )}
+}*/
+}
 
 /*
 const getAll = async (req,res) => {
@@ -53,5 +71,6 @@ const getAll = async (req,res) => {
   }
 };
 */
-export default getAll
+
+export default handler
 //export default ensureDatabaseConnection

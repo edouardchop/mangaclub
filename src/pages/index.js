@@ -1,7 +1,7 @@
 import axios from "axios";
 import Navbar from "../components/Navbar"
 import OneManga from "@/components/OneManga"
-import {useState,useEffect,useRef} from "react";
+import {useState} from "react";
 import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
@@ -35,11 +35,9 @@ export const getServerSideProps = async () =>
         manga: [],
         categoryManga: [],
       }
-    };
+    }
   }
-};
-
-
+}
 
 
 export default function Home ( props )
@@ -47,77 +45,49 @@ export default function Home ( props )
   const router = useRouter()
   const { category, manga, categoryManga } = props
   const [ filteredMangaData, setFilteredMangaData ] = useState( manga );
-  const [NoManga, setNoManga] = useState(false);
-  const [textSearch, setTextSearch] = useState("");
+const [NoManga, setNoManga] = useState(false);
+const [textSearch, setTextSearch] = useState("");
 const [showRightBar,setShowRightBar]=useState(false)
 
-  /*
-  const handleSearch = ( e ) =>
-  {setNoManga(false)
-    const searchData = allMangaData.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value)
-    setFilteredMangaData( searchData )
-    if ( searchData.length == 0 )
-    {
-      setNoManga(true)
-    }
-  }
-  */
-  const ref = useRef(null);
-  
 
-  useEffect( () => {
-    const animation = new FadeInAnimation(ref.current);
-    animation.start(1000);
-    return () => {
-      animation.stop();
-    };
-  }, [ showRightBar ] );
-  
-  const handleInputChange = ( e ) =>
-  {setNoManga(false)
- 
-      const value = e.target.value
-      setTextSearch( value )
-      console.log( "voici la value : ", textSearch )
-    if ( value.length == 0 )
-    {
-      setNoManga(true)
-    }
-  }
-
-    const handleSearchPartial = ( e ) =>
-    {
-    setNoManga( false )
-      const searchData = category.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value )
-      setFilteredMangaData( searchData )
-      setTextSearch(e.target.value)
-
-    if ( searchData.length == 0 )
-    {
-      setTextSearch()
-      setNoManga(true)
-    }
-    }
-
-    const handleTag = (element) =>
+    const handleSearchPartial = async( e ) =>
     {
       setNoManga( false )
-      console.log( "mangas :", manga )
-      console.log( "element : ", element )
-      console.log( "categories ;", category )
-      const categorySearch = category.filter( item => item.name == element )
-      console.log( "lalalal :", categorySearch )
-      const transTab = categoryManga.filter( mix => mix.categoryId == categorySearch.id )
-            console.log( "lalalal :", transTab )
-
-      setTextSearch( element )
-      if ( manga.length == 0 )
+      const categoryValue = category.filter( item => item.name.toLowerCase() === e.target.value.toLowerCase() );
+      console.log( "voici la value : ", categoryValue)
+      if ( categoryValue.length != 0 )
+      {
+      try
+      {
+        const categoryResponse = await axios.get( `http://localhost:3000/api/category/${categoryValue[0].id}` );
+        const newData = categoryResponse
+        setFilteredMangaData( newData.data )
+      }
+      catch(error){console.log("il y a eu une erreur lors de la récupération de la catégorie :",error)}
+      } 
+    if ( categoryValue.length == 0)
     {
       setNoManga(true)
     }
-      
-
-  }
+    }
+  
+  
+    const handleTag = async (element) =>
+    {
+      const categorySearch = category.filter( item => item.name == element.toLowerCase() )
+      if ( categorySearch.length != 0 )
+      {
+        const categoryResponse = await axios.get( `http://localhost:3000/api/category/${ categorySearch[ 0 ].id }` );
+        const newData = categoryResponse
+        setFilteredMangaData( newData.data )
+        setNoManga( false )
+      }
+      if ( categorySearch.length == 0 )
+      {
+      setNoManga(true)
+    }
+    }
+  
   const filterAllManga = () =>
   {
     setFilteredMangaData( manga )
@@ -126,20 +96,41 @@ const [showRightBar,setShowRightBar]=useState(false)
     
   }
 
+  const handleSearchFilter = async ( e )=>{
+    setNoManga( false )
+    console.log("result : ",e.target.value)
+    const idValue = e.target.value
+  
+      try
+      {
+        const categoryResponse = await axios.get( `http://localhost:3000/api/category/${ idValue }` );
+        const newData = categoryResponse
+        if ( newData.length == 0 )
+        {
+          setNoManga( true )
+        } else
+        {
+          setFilteredMangaData( newData.data )
+        }
+      }
+      catch ( error ) { console.log( "il y a eu une erreur lors de la récupération de la catégorie :", error ) }
+  }
+
+
   return (
     <div>
-      <Navbar onClick={ () => setShowRightBar( !showRightBar ) } dataDrawer="drawer-navigation" /> 
-      { !showRightBar &&<VerticalBar ref={ ref }  onClick={ () => setShowRightBar( !showRightBar ) } />}
+      <Navbar onClick={ () => setShowRightBar( !showRightBar ) } /> 
+      { showRightBar &&<VerticalBar onClick={ () => setShowRightBar( !showRightBar ) } />}
       <h1 className="py-10 text-4xl font-bold text-black text-center">{ textSearch == 0 ? "Tout les mangas" : textSearch }</h1>
       <div className="md:flex justify-between ms-12 md:ms-36 me-36">
-      <Search onClick={ handleTag }  onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } /> 
+      <Search  onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } /> 
       <div className="flex">
           <Tag onClick={filterAllManga} key={ "all" } tag={ "all" } />
       <Tag onClick={ () => handleTag( "Aventure" ) } key={ "aventureFilter" } tag={ "Aventure" } />
       <Tag onClick={ () => handleTag( "Romance" ) } key={ "romanceFilter" } tag={ "Romance" } />
       <Tag onClick={ () => handleTag( "Shonen" ) } key={ "shonenFilter" } tag={ "Shonen" } />
       </div>  
-        <Filter onChange={ ( e ) => { { handleSearchPartial( e ) } } } onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } />
+        <Filter categories={ category } onChange={ (e)=>handleSearchFilter(e) }/>
     </div>
     <div>
         { !NoManga &&
@@ -149,7 +140,7 @@ const [showRightBar,setShowRightBar]=useState(false)
             return (
               <div className="mx-2 hover:scale-110" key={ manga.id }>
                 <div type="button" onClick={() => router.push(`mangas/${manga.id}`)}>
-                <OneManga src={ `https://mangaclubimage.s3.eu-north-1.amazonaws.com/${manga.source}` } { ...manga } onClick={()=> handleTag(tag1,tag2) } tag1={tag1} tag2={tag2} />
+                  <OneManga src={ `https://mangaclubimage.s3.eu-north-1.amazonaws.com/${ manga.source }` } { ...manga } onClick={ () =>  handleTag( tag1, tag2 )  } tag1={tag1} tag2={tag2} />
                 </div>
               </div>
                   )

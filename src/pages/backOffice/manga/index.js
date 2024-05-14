@@ -2,12 +2,12 @@ import { useState } from "react"
 import axios from 'axios';
 import LineBackOffice from "@/components/LineBackOffice"
 import Navbar from "@/components/Navbar";
-
+import VerticalBar from "@/components/VerticalBar";
 export const getServerSideProps = async ( { params } ) =>
 {
   try
   {
-    const mangaResponse = await axios.get( " http://localhost:3000/api/manga/" )
+    const mangaResponse = await axios.get( "http://localhost:3000/api/manga/" )
     const { data: mangaData } = mangaResponse
     return ( {
       props: {
@@ -27,15 +27,14 @@ export const getServerSideProps = async ( { params } ) =>
 
 export default function Manga (props)
 {
-
-  const mangas = props.manga
-const allManga=mangas.map(manga=>[manga.id,manga.name,manga.source])
+const mangas = props.manga
+const allManga = mangas.map( manga => [ manga.id, manga.name, manga.source ] )
 const [ lines, setLines ] = useState( allManga )
 const [addField,setAddField] = useState(false)
 const [inputValue, setInputValue] = useState('');
 const [selectedFile, setSelectedFile] = useState(null);
-  const [ newText, setNewText ] = useState( "" )
-  const [ newName, setNewName ] = useState( "" )
+const [ newText, setNewText ] = useState( "" )
+const [showRightBar,setShowRightBar]=useState(false)
   
     const handleFileChange = ( event ) =>
     {
@@ -78,7 +77,9 @@ const uploadImage = () => {
 
   const deleteLine = ( line ) =>
   {
-    const newLines = lines.filter( otherLine => otherLine[ 0]!= line[0] )
+
+    const newLines = lines.filter( otherLine => otherLine[ 0 ] != line[ 0 ] )
+    const reqDelete = axios.delete( `http://localhost:3000/api/manga/${line[0]}` )
    setLines(newLines) 
   }
   
@@ -113,7 +114,15 @@ const uploadImage = () => {
           source: newText.replace( /\s/g, "" ),
           rate: 0
         } )
-      }else{console.log("ca ne marche pas!")}
+        
+        const loadManga = await axios.get( 'http://localhost:3000/backOffice/manga')
+        const newMangas=loadManga.data
+        const newList = [ ...allManga,[ newMangas.id, newMangas.name, newMangas.source ]]
+       setLines(newList)
+
+
+      } else { console.log( "ca ne marche pas!" ) }
+      
     } catch ( error )
     {
       console.error( 'Erreur lors de la récupération des données:', error )
@@ -139,8 +148,9 @@ const uploadImage = () => {
 return (
 
   <>
-    <Navbar/>
-        <div className="flex flex-col items-center">
+    <Navbar onClick={ () => setShowRightBar( !showRightBar ) } /> 
+    { showRightBar &&<VerticalBar onClick={ () => setShowRightBar( !showRightBar ) } />}
+    <div className="flex flex-col items-center">
     <h1 className="text-3xl pt-8">BackOffice Manga</h1>
     <buton className="bg-yellow-500 hover:bg-yellow-400 text-white font-bold py-2 px-4 border-b-4 border-yellow-700 hover:border-yellow-500 rounded mt-12 mb-8" onClick={()=> setAddField(true)}>add</buton>  
     </div>

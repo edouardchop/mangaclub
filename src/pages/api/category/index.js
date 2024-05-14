@@ -31,8 +31,11 @@ if ( req.method === 'POST' )
   }
     catch ( error )
   {res.send( { error: error } )}
+  }
 }
-}
+
+
+
 /*
 const getAll = async (req,res) => {
   try {
