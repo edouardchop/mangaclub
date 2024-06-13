@@ -4,6 +4,7 @@ import Image from "next/image";
 import Rating from "@/components/Rating";
 import Tag from "@/components/Tag"
 import Filter from "@/components/Filter";
+import VerticalBar from "@/components/VerticalBar";
 import { useState } from "react";
 import { useRouter } from 'next/router'
 
@@ -50,7 +51,8 @@ export default function  manga(props)
     const [ minus, setMinus ] = useState( false )
     const [ nameCategory, setNameCategory ] = useState( null )
     const [allName,setAllName] = useState( category )
-    
+    const [showRightBar,setShowRightBar]=useState(false)
+
     const getAllCategory = async () =>
     {
         setAdd( !add )
@@ -87,8 +89,9 @@ export default function  manga(props)
         }
     }
 
-    return ( <>
-    <Navbar/>
+return ( <>
+<Navbar onClick={ () => setShowRightBar( !showRightBar ) } /> 
+{ showRightBar &&<VerticalBar onClick={ () => setShowRightBar( !showRightBar ) } />}
  <div className="flex ms-7 mt-4">
       <div className="">
         <Image

@@ -1,5 +1,5 @@
-const { DataTypes} = require( 'sequelize' );
-const sequelize = require('../newSequelize')
+const { DataTypes} = require( 'sequelize' )
+import { sequelize } from'../newSequelize'
 
 const userModel = sequelize.define('users', {
   id: {
@@ -7,8 +7,28 @@ const userModel = sequelize.define('users', {
     primaryKey: true,
     autoIncrement: true,
   },
-  name: {
+  firstname: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+    lastname: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+    username: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+    email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+    password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+    role: {
+    type: DataTypes.ENUM("user","admin","superadmin"),
     allowNull: false,
   },
   createdAt: {
@@ -22,5 +42,4 @@ const userModel = sequelize.define('users', {
 });
 
 userModel.sync();
-console.log( "The table for the categories model was just (re)created!" );
-module.exports = { userModel}
+export default userModel

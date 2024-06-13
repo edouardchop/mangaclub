@@ -6,7 +6,7 @@ import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
 import VerticalBar from "@/components/VerticalBar";
-import getCategoryByManga from "@/api/function/categoryModel"
+import getTag from "@/api/function/getTag.js"
 import { useRouter } from "next/router";
 
 export const getServerSideProps = async () =>
@@ -17,7 +17,7 @@ export const getServerSideProps = async () =>
     const { data: categoryData } = categoryResponse
     const mangaResponse = await axios.get("http://localhost:3000/api/manga");
     const { data: mangaData } = mangaResponse
-    const categoryMangaResponse = await axios.get("http://localhost:3000/api/categoryManga");
+    const categoryMangaResponse = await axios.get("http://localhost:3000/api/mangaCategories/categoryToManga");
     const { data: categoryManga } = categoryMangaResponse
 
     return {
@@ -44,7 +44,6 @@ export default function Home ( props )
 {
   const router = useRouter()
   const { category, manga, categoryManga } = props
-  console.log("1 : ",manga)
   const [ filteredMangaData, setFilteredMangaData ] = useState( manga )
 const [NoManga, setNoManga] = useState(false);
 const [textSearch, setTextSearch] = useState("");
@@ -61,7 +60,6 @@ const [showRightBar,setShowRightBar]=useState(false)
         const categoryResponse = await axios.get( `http://localhost:3000/api/mangaCategories/categoryToManga/${categoryValue[0].id}` );
         const newData = categoryResponse
         setFilteredMangaData( newData.data )
-        console.log("2 :",newData.data)
       }
       catch(error){console.log("il y a eu une erreur lors de la récupération de la catégorie :",error)}
       } 
@@ -73,7 +71,7 @@ const [showRightBar,setShowRightBar]=useState(false)
   
   
     const handleTag = async (element) =>
-    {console.log("handletag")
+    {
       const categorySearch = category.filter( item => item.name == element.toLowerCase() )
       if ( categorySearch.length != 0 )
       {
@@ -102,19 +100,15 @@ const [showRightBar,setShowRightBar]=useState(false)
   
       try
       {
-        console.log("handleSearchFilter")
         const categoryResponse = await axios.get( `http://localhost:3000/api/mangaCategories/categoryToManga/${ idValue }` )
         const newData = categoryResponse
         setFilteredMangaData( newData.data )
         if ( newData.length == 0 )
         {
           setNoManga( true )
-        } else
-        {
-          console.log( "newdata : ",newData.data )
         }
       }
-      catch ( error ) { console.log( "il y a eu une erreur lors de la récupération de la catégorie :", error ) }
+      catch ( error ) { console.error( "il y a eu une erreur lors de la récupération de la catégorie :", error ) }
   }
 
 
@@ -137,7 +131,7 @@ const [showRightBar,setShowRightBar]=useState(false)
         { !NoManga &&
           <div className="flex flex-wrap justify-center md:justify-start pt-24">
            {filteredMangaData.map(manga=> {
-             const [ tag1, tag2 ] = getCategoryByManga( manga, category, categoryManga );
+             const [ tag1, tag2 ] = getTag( manga, category, categoryManga );
             return (
               <div className="mx-2 hover:scale-110" key={ manga.id }>
                 <div type="button" onClick={() => router.push(`mangas/${manga.id}`)}>

@@ -1,8 +1,6 @@
 import Rating from './Rating'
 import Image from 'next/image'
 import Tag from"./Tag"
-import getCategoryByManga from "@/api/function/categoryModel"
-import { useEffect } from 'react'
 
 
 export default function OneManga (props)

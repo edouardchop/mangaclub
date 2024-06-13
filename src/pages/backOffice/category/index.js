@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import axios from 'axios';
 import LineBackOfficeCategory from "@/components/LineBackOfficeCategory"
 import Navbar from "@/components/Navbar";
 import VerticalBar from "@/components/VerticalBar";
+
 export const getServerSideProps = async ({ params }) => {
 
   const categoryResponse = await axios.get( " http://localhost:3000/api/category/" )
@@ -17,28 +18,19 @@ export const getServerSideProps = async ({ params }) => {
 }
 
 
-
 export default function Category (props)
 {
 
   const categories = props.category
 const allCategory=categories.map(category=>[category.id,category.name])
 const [ lines, setLines ] = useState( allCategory )
-const [ incrementId, setIncrementId ] = useState( allCategory.length + 1 )
 const [addField,setAddField] = useState(false)
   const [ inputValue, setInputValue ] = useState( '' );
   const [ newText, setNewText ] = useState( "" )
   const [showRightBar,setShowRightBar]=useState(false)
 
-    const handleFileChange = ( event ) =>
-    {
-        console.log("change")
-    const file = event.target.files[0];
-        setSelectedFile( file )
-        console.log(file)
-  };
+ useEffect(() => {}, [lines]);
 
-  
   const addCategory = () =>
   {setAddField(true)
 
