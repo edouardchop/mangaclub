@@ -6,14 +6,10 @@ export async function getServerSideProps() {
   try
   {
     
-    const response = await axios.get(`http://localhost:3000/api/image?Key=${fileKey}`, {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/image?Key=${fileKey}`, {
       responseType: 'arraybuffer',
     });
-
-    console.log("Requête vers image faite");
-
     const base64 = Buffer.from(response.data, 'binary').toString('base64');
-
     return {
       props: {
         name: manga,

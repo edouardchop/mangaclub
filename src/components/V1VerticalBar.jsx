@@ -21,12 +21,12 @@ export default function VerticalBar ({onClick,children}) {
           <FaWindowClose size={ 70 }/></button>
           </div>
           <div>
-            {HideFilter&&<div><button className="border-2 p-7 w-full" onClick={()=>setHideFilter(!HideFilter)}>
+            {HideFilter&&<div><button className="border-2 p-7 w-full" >
               hide filter
             </button>
             {children}
           </div>}</div>
-          { !HideFilter && <button className="border-2 p-7 w-full" onClick={ () => setHideFilter( !HideFilter ) }>Show Filter</button> }
+          { !HideFilter && <button className="border-2 p-7 w-full">Show Filter</button> }
           <div className="border-2 p-7 text-center">Vos favoris</div>
           <div className="border-2 p-7 text-center">Inscription</div>
           <div className="border-2 p-7 text-center">Connexion</div>

@@ -1,24 +1,19 @@
-exports.seed = async function (knex) {
-  await knex.raw("TRUNCATE TABLE users RESTART IDENTITY CASCADE")
-  await knex("users").insert([
-    {
-      name: "Ed",
-      surname: "Chop",
-      username: "superSaiyan",
-      email:"vegetalesang@gmail.com"
-    },
-   {
-      name: "Eren",
-      surname: "Jaeger",
-      username: "xoxo",
-      email:"tousensemble@gmail.com"
-    },
-   {
-      name: "Harry",
-      surname: "Potter",
-      username: "Voldy",
-      email:"noname@gmail.com"
-    },
-  ])
-}
+const bcrypt = require('bcrypt');
 
+exports.seed = async function (knex) {
+  // Hasher le mot de passe avant de l'insérer
+  const hashedPassword = await bcrypt.hash('azerty', 10);
+
+  await knex('users').del();
+
+  await knex('users').insert([
+    {
+      firstname: "Edouard",
+      lastname: "Edouard",
+      username: "ed",
+      email: "chop@gmail.com",
+      password: hashedPassword,
+      role: "admin",
+    },
+  ]);
+};

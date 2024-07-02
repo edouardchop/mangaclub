@@ -22,7 +22,6 @@ async uploadFile(name, type, buf) {
     ContentType: type,
     ContentEncoding: 'base64',
   };
-console.log("les params : ",params)
   try {
     const data = await this.s3.upload(params).promise();
 
@@ -38,13 +37,11 @@ console.log("les params : ",params)
 
   async getFileStream ( fileKey )
   {
-    console.log("on est dans getFileStream")
     const params = {
       Bucket:AWS_BUCKET,
       Key: fileKey
     }
 
-console.log("les params : ",params)
     try {
       const data = await this.s3.getObject(params).promise()
 

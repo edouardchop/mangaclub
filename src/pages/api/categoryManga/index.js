@@ -1,57 +1,30 @@
+import MangaCategory from "../../../api/db/models/MangaCategoryModel";
+const { sequelize } = require("../../../api/db/newSequelize");
+const xss = require('xss');
 
-import  MangaCategory  from "../../../api/db/models/MangaCategoryModel"   
-const {sequelize} = require( "../../../api/db/newSequelize")
 const ensureDatabaseConnection = async () => {
   try {
-    console.log( 'Connexion à la base de données établie avec succès.')
+    await sequelize.authenticate();
   } catch (error) {
     console.error('Erreur de connexion à la base de données :', error);
     throw error;
   }
 };
 
-
-const getAll = async (req,res) => {
-  try
-  {
-        await sequelize.authenticate();
-      const allMangaCategories = await MangaCategory.findAll()
-      res.send({ result: allMangaCategories })
-  } catch (error) {
-    console.error('Erreur lors de la récupération des catégories', error);
-    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
+/* donne les mangas associés à chaque catégorie */
+const handler = async (req, res) => {
+  if (req.method === 'GET') {
+    try {
+      await ensureDatabaseConnection();
+      const allMangaCategories = await MangaCategory.findAll();
+      res.status(200).json({ result: allMangaCategories });
+    } catch (error) {
+      console.error('Erreur lors de la récupération des catégories', error);
+      res.status(500).json({ error: 'An error occurred while retrieving manga categories' });
+    }
+  } else {
+    res.status(405).json({ message: 'Method Not Allowed' });
   }
 };
 
-/*
-const getAll = async (req,res) => {
-  try {
-      const allCategories = await categoryModel.findAll()
-      console.log("voici les categories dans getAll:",categoryModel)
-      res.send({ result: allCategories })
-  } catch (error) {
-    console.error('Erreur lors de la récupération des catégories', error);
-    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
-  }
-};
-
-
-
-const categoryModel = require('../../../api/db/models/categoryModel');
-const sequelize = require( "../../../api/db/utils/newSequelize" )
-
-const getAll = async (req,res) => {
-  try
-  {
-        await sequelize.authenticate();
-      const allCategories = await categoryModel.findAll()
-      console.log("voici les categories dans getAll:",categoryModel)
-      res.send({ result: allCategories })
-  } catch (error) {
-    console.error('Erreur lors de la récupération des catégories', error);
-    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
-  }
-};
-*/
-export default getAll
-//export default ensureDatabaseConnection
+export default handler;

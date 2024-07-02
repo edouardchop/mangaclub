@@ -1,29 +1,29 @@
 import axios from "axios";
-import Navbar from "../components/Navbar"
-import OneManga from "@/components/OneManga"
-import {useState,useEffect,useRef} from "react";
+import Navbar from "../components/Navbar";
+import OneManga from "@/components/OneManga";
+import { useState } from "react";
 import Tag from "@/components/Tag";
 import Filter from "@/components/Filter";
 import Search from "@/components/Search";
-import VerticalBar from "@/components/VerticalBar";
-import getCategoryByManga from "@/api/function/categoryModel"
+import getTag from "@/api/function/getTag.js";
 import { useRouter } from "next/router";
 
-export const getServerSideProps = async () =>
-{
-  try
-  {
-    const categoryResponse = await axios.get("http://localhost:3000/api/category");
-    const { data: categoryData } = categoryResponse
-    const mangaResponse = await axios.get("http://localhost:3000/api/manga");
-    const { data: mangaData } = mangaResponse
-    const categoryMangaResponse = await axios.get("http://localhost:3000/api/categoryManga");
-    const { data: categoryManga } = categoryMangaResponse
+export const getServerSideProps = async () => {
+  try {
+    const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category`);
+    const { data: categoryData } = categoryResponse;
+
+    const mangaResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/manga`);
+    const { result: mangaList } = mangaResponse.data;
+
+    const categoryMangaResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga`);
+    const { data: categoryManga } = categoryMangaResponse;
+
 
     return {
       props: {
         category: categoryData.result,
-        manga: mangaData.result,
+        manga: mangaList,
         categoryManga: categoryManga.result,
       }
     };
@@ -39,125 +39,118 @@ export const getServerSideProps = async () =>
   }
 };
 
-
-
-
-export default function Home ( props )
-{
-  const router = useRouter()
-  const { category, manga, categoryManga } = props
-  const [ filteredMangaData, setFilteredMangaData ] = useState( manga );
+export default function Home(props) {
+  const router = useRouter();
+  const { category, manga, categoryManga } = props;
+  const [filteredMangaData, setFilteredMangaData] = useState(manga);
   const [NoManga, setNoManga] = useState(false);
   const [textSearch, setTextSearch] = useState("");
-const [showRightBar,setShowRightBar]=useState(false)
 
-  /*
-  const handleSearch = ( e ) =>
-  {setNoManga(false)
-    const searchData = allMangaData.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value)
-    setFilteredMangaData( searchData )
-    if ( searchData.length == 0 )
-    {
-      setNoManga(true)
+
+  const handleSearchPartial = async (e) => {
+    setNoManga(false);
+    const categoryValue = category.filter(item => item.name.toLowerCase() === e.target.value.toLowerCase());
+    if (categoryValue.length !== 0) {
+      try {
+        const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${categoryValue[0].id}`);
+        const newData = categoryResponse.data;
+        setFilteredMangaData(newData);
+      } catch (error) {
+        console.error("il y a eu une erreur lors de la récupération de la catégorie :", error);
+      }
     }
-  }
-  */
-  const ref = useRef(null);
-  
-
-  useEffect( () => {
-    const animation = new FadeInAnimation(ref.current);
-    animation.start(1000);
-    return () => {
-      animation.stop();
-    };
-  }, [ showRightBar ] );
-  
-  const handleInputChange = ( e ) =>
-  {setNoManga(false)
- 
-      const value = e.target.value
-      setTextSearch( value )
-      console.log( "voici la value : ", textSearch )
-    if ( value.length == 0 )
-    {
-      setNoManga(true)
+    if (categoryValue.length === 0) {
+      setNoManga(true);
     }
-  }
+  };
 
-    const handleSearchPartial = ( e ) =>
-    {
-    setNoManga( false )
-      const searchData = category.filter( ( element ) => element.tag1 === e.target.value || element.tag2 === e.target.value )
-      setFilteredMangaData( searchData )
-      setTextSearch(e.target.value)
-
-    if ( searchData.length == 0 )
-    {
-      setTextSearch()
-      setNoManga(true)
+  const handleSearch = async (text) => {
+    setNoManga(false);
+    if (text.length !== 0) {
+      const categoryValue = category.filter(item => item.name.toLowerCase() === text.toLowerCase());
+      if (categoryValue.length !== 0) {
+        try {
+          const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${categoryValue[0].id}`);
+          const newData = categoryResponse.data;
+          setFilteredMangaData(newData);
+        } catch (error) {
+          console.error("il y a eu une erreur lors de la récupération de la catégorie :", error);
+        }
+      }
+      if (categoryValue.length === 0) {
+        setNoManga(true);
+      }
     }
+  };
+
+  const handleTag = async (element) => {
+    const categorySearch = category.filter(item => item.name.toLowerCase() === element.toLowerCase());
+    if (categorySearch.length !== 0) {
+      try {
+        const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${categorySearch[0].id}`);
+        const newData = categoryResponse.data;
+        setFilteredMangaData(newData);
+        setNoManga(false);
+      } catch (error) {
+        console.error("il y a eu une erreur lors de la récupération de la catégorie :", error);
+      }
     }
-
-    const handleTag = (element) =>
-    {
-      setNoManga( false )
-      console.log( "mangas :", manga )
-      console.log( "element : ", element )
-      console.log( "categories ;", category )
-      const categorySearch = category.filter( item => item.name == element )
-      console.log( "lalalal :", categorySearch )
-      const transTab = categoryManga.filter( mix => mix.categoryId == categorySearch.id )
-            console.log( "lalalal :", transTab )
-
-      setTextSearch( element )
-      if ( manga.length == 0 )
-    {
-      setNoManga(true)
+    if (categorySearch.length === 0) {
+      setNoManga(true);
     }
-      
+  };
 
-  }
-  const filterAllManga = () =>
-  {
-    setFilteredMangaData( manga )
-    setTextSearch( "Tout les mangas" )
-    setNoManga(false)
-    
-  }
+  const filterAllManga = () => {
+    setFilteredMangaData(manga);
+    setTextSearch("Tout les mangas");
+    setNoManga(false);
+  };
+
+  const handleSearchFilter = async (e) => {
+    setNoManga(false);
+    const idValue = e.target.value;
+
+    try {
+      const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${idValue}`);
+      const newData = categoryResponse.data;
+      setFilteredMangaData(newData);
+      if (newData.length === 0) {
+        setNoManga(true);
+      }
+    } catch (error) {
+      console.error("il y a eu une erreur lors de la récupération de la catégorie :", error);
+    }
+  };
 
   return (
     <div>
-      <Navbar onClick={ () => setShowRightBar( !showRightBar ) } dataDrawer="drawer-navigation" /> 
-      { !showRightBar &&<VerticalBar ref={ ref }  onClick={ () => setShowRightBar( !showRightBar ) } />}
-      <h1 className="py-10 text-4xl font-bold text-black text-center">{ textSearch == 0 ? "Tout les mangas" : textSearch }</h1>
+      <h1 className="py-10 text-4xl font-bold text-black text-center">{textSearch === 0 ? "Tout les mangas" : textSearch}</h1>
       <div className="md:flex justify-between ms-12 md:ms-36 me-36">
-      <Search onClick={ handleTag }  onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } /> 
-      <div className="flex">
-          <Tag onClick={filterAllManga} key={ "all" } tag={ "all" } />
-      <Tag onClick={ () => handleTag( "Aventure" ) } key={ "aventureFilter" } tag={ "Aventure" } />
-      <Tag onClick={ () => handleTag( "Romance" ) } key={ "romanceFilter" } tag={ "Romance" } />
-      <Tag onClick={ () => handleTag( "Shonen" ) } key={ "shonenFilter" } tag={ "Shonen" } />
-      </div>  
-        <Filter onChange={ ( e ) => { { handleSearchPartial( e ) } } } onKeyDown={ ( e ) => { if ( e.key == "Enter" ) { handleSearchPartial( e ) } } } />
-    </div>
-    <div>
-        { !NoManga &&
+        <Search onKeyDown={(e) => { if (e.key === "Enter") { handleSearchPartial(e) } }} onClick={handleSearch} />
+        <div className="flex">
+          <Tag onClick={filterAllManga} key={"all"} tag={"all"} />
+          <Tag onClick={() => handleTag("Aventure")} key={"aventureFilter"} tag={"Aventure"} />
+          <Tag onClick={() => handleTag("Romance")} key={"romanceFilter"} tag={"Romance"} />
+          <Tag onClick={() => handleTag("Shonen")} key={"shonenFilter"} tag={"Shonen"} />
+        </div>
+        <Filter categories={category} onChange={(e) => handleSearchFilter(e)} />
+      </div>
+      <div>
+        {!NoManga &&
           <div className="flex flex-wrap justify-center md:justify-start pt-24">
-           {filteredMangaData.map(manga=> {
-             const [ tag1, tag2 ] = getCategoryByManga( manga, category, categoryManga );
-            return (
-              <div className="mx-2 hover:scale-110" key={ manga.id }>
-                <div type="button" onClick={() => router.push(`mangas/${manga.id}`)}>
-                <OneManga src={ `https://mangaclubimage.s3.eu-north-1.amazonaws.com/${manga.source}` } { ...manga } onClick={()=> handleTag(tag1,tag2) } tag1={tag1} tag2={tag2} />
+            {filteredMangaData.map(manga => {
+              const [tag1, tag2] = getTag(manga, category, categoryManga);
+              return (
+                <div className="mx-2 hover:scale-110" key={manga.id}>
+                  <div type="button" onClick={() => router.push(`mangas/${manga.id}`)}>
+                    <OneManga src={`https://mangaclubimage.s3.eu-north-1.amazonaws.com/${manga.source}`} {...manga} onClick={() => handleTag(tag1, tag2)} tag1={tag1} tag2={tag2} />
+                  </div>
                 </div>
-              </div>
-                  )
+              );
             })}
-          </div> }
-        { NoManga && <div className="text-center pt-36 text-2xl font-bold">No Manga Found</div> }
-     </div>
-</div>
-)
+          </div>}
+        {NoManga && <div className="text-center pt-36 text-2xl font-bold">No Manga Found</div>}
+      </div>
+    </div>
+  );
 }
-

@@ -37,7 +37,7 @@ const MangaCategory = sequelize.define('MangaCategory', {
   
 },
 {
-  tableName: 'MangaCategory', // Définissez le nom de la table ici si nécessaire
+  tableName: 'MangaCategory',
   } );
 
 export default MangaCategory;
