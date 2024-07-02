@@ -69,7 +69,7 @@ export default function Signup() {
     }
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}auth/signup`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
         firstname: formData.firstname,
         lastname: formData.lastname,
         username: formData.username,
