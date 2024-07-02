@@ -68,7 +68,7 @@ export const getServerSideProps = async ({ req }) => {
   }
 };
 
-export default function mySpace(props) {
+export default function MySpace(props) {
   const router = useRouter();
   const { category, manga, categoryManga, user } = props;
   const [filteredMangaData, setFilteredMangaData] = useState(manga);
