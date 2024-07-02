@@ -13,7 +13,7 @@ const CreateMangaForm = ({ user, updateMangaList }) => {
  const sendMangaData = async () => {
     try {
       if (selectedFile) {
-        const mangaResponse = await axios.post('http://localhost:3000/api/manga/', {
+        const mangaResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/manga/`, {
           name: newText,
           source: newText.replace(/\s/g, ""),
           rate: 0,
