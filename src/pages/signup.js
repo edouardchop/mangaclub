@@ -7,7 +7,7 @@ import { useAuth } from '@/context/auth'; // Assurez-vous que le chemin est corr
 
 export default function Signup() {
   const router = useRouter();
-  const { setIsAuthenticated } = useAuth(); // Utilisez le hook useAuth ici
+  const { setIsAuthenticated } = useAuth();
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -28,7 +28,6 @@ export default function Signup() {
       ...prevState,
       [name]: value,
     }));
-    // Effacer les messages d'erreur lorsque l'utilisateur commence à retaper
     setFormErrors((prevErrors) => ({
       ...prevErrors,
       emailError: '',
@@ -50,7 +49,6 @@ export default function Signup() {
       valid = false;
     }
 
-    // Validation du mot de passe
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{12,}$/;
     if (!formData.password.match(passwordRegex)) {
       setFormErrors((prevErrors) => ({
@@ -67,11 +65,11 @@ export default function Signup() {
     e.preventDefault();
 
     if (!validateForm()) {
-      return; // Arrêter la soumission du formulaire si la validation échoue
+      return
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/signup', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}auth/signup`, {
         firstname: formData.firstname,
         lastname: formData.lastname,
         username: formData.username,
@@ -81,7 +79,7 @@ export default function Signup() {
       });
 
       if (response.data) {
-        await handleLogin(); // Log in after successful signup
+        await handleLogin()
       } else {
         console.error('Erreur lors de l\'inscription:', response.data);
       }
@@ -103,7 +101,7 @@ export default function Signup() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         username: formData.username,
         password: formData.password,
       });

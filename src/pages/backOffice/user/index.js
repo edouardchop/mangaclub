@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const getServerSideProps = async ({ params }) => {
   try {
-    const userResponse = await axios.get("http://localhost:3000/api/user");
+    const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user`);
     const { data: userData } = userResponse;
 
     // Assurez-vous que userData.users est défini avant de l'assigner à props.user
@@ -33,7 +33,7 @@ export default function User(props) {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/user/${id}`);
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/user/${id}`);
 
       // Mettre à jour l'état local en supprimant la ligne avec l'ID correspondant
       setLines(lines.filter(line => line[0] !== id));

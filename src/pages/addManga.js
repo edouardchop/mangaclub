@@ -13,7 +13,7 @@ export const getServerSideProps = authenticateUser( async ( { req } ) =>
     try
     {
 
-        const userResponse = await axios.get( 'http://localhost:3000/api/auth/me', {
+        const userResponse = await axios.get( `${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
             headers: {
                 Cookie: `token=${ token }`,
             },
@@ -81,7 +81,7 @@ const AddManga = (props) => {
     }
 
     try {
-      const mangaResponse = await axios.post('http://localhost:3000/api/manga/', {
+      const mangaResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/manga/`, {
         name: inputValue,
         source: inputValue.replace(/\s/g, ''),
         rate: 0,

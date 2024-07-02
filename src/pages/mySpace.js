@@ -22,10 +22,10 @@ export const getServerSideProps = async ({ req }) => {
   }
 
   try {
-    const categoryResponse = await axios.get("http://localhost:3000/api/category");
+    const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category`);
     const { data: categoryData } = categoryResponse;
 
-    const userResponse = await axios.get('http://localhost:3000/api/auth/me', {
+    const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
       headers: {
         Cookie: `token=${token}`,
       },
@@ -33,14 +33,14 @@ export const getServerSideProps = async ({ req }) => {
     const userData = userResponse.data.user;
 
     // Utilisez userData.userId pour filtrer les mangas
-    const mangaResponse = await axios.get(`http://localhost:3000/api/manga?userId=${userData.userId}`, {
+    const mangaResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/manga?userId=${userData.userId}`, {
       headers: {
         Cookie: `token=${token}`,
       },
     });
     const { data: mangaData } = mangaResponse;
 
-    const categoryMangaResponse = await axios.get("http://localhost:3000/api/mangaCategories/categoryToManga", {
+    const categoryMangaResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga`, {
       headers: {
         Cookie: `token=${token}`,
       },
@@ -81,7 +81,7 @@ export default function MySpace(props) {
     const categoryValue = category.filter(item => item.name.toLowerCase() === e.target.value.toLowerCase());
     if (categoryValue.length != 0) {
       try {
-        const categoryResponse = await axios.get(`http://localhost:3000/api/mangaCategories/categoryToManga/${categoryValue[0].id}`);
+        const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${categoryValue[0].id}`);
         setFilteredMangaData(categoryResponse.data);
       } catch (error) {
         console.error("Erreur lors de la récupération de la catégorie :", error);
@@ -97,7 +97,7 @@ export default function MySpace(props) {
       const categoryValue = category.filter(item => item.name.toLowerCase() === text.toLowerCase());
       if (categoryValue.length != 0) {
         try {
-          const categoryResponse = await axios.get(`http://localhost:3000/api/mangaCategories/categoryToManga/${categoryValue[0].id}`);
+          const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${categoryValue[0].id}`);
           setFilteredMangaData(categoryResponse.data);
         } catch (error) {
           console.error("Erreur lors de la récupération de la catégorie :", error);
@@ -111,7 +111,7 @@ export default function MySpace(props) {
   const handleTag = async (element) => {
     const categorySearch = category.filter(item => item.name == element.toLowerCase());
     if (categorySearch.length != 0) {
-      const categoryResponse = await axios.get(`http://localhost:3000/api/mangaCategories/categoryToManga/${categorySearch[0].id}`);
+      const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}i/mangaCategories/categoryToManga/${categorySearch[0].id}`);
       setFilteredMangaData(categoryResponse.data);
       setNoManga(false);
     } else {
@@ -130,7 +130,7 @@ export default function MySpace(props) {
     const idValue = e.target.value;
 
     try {
-      const categoryResponse = await axios.get(`http://localhost:3000/api/mangaCategories/categoryToManga/${idValue}`);
+      const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${idValue}`);
       setFilteredMangaData(categoryResponse.data);
       if (categoryResponse.data.length == 0) {
         setNoManga(true);

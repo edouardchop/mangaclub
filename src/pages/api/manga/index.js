@@ -16,16 +16,15 @@ const requestManga = async (req, res) => {
 if (req.method === 'GET') {
     try {
       await ensureDatabaseConnection();
-      const { userId } = req.query; // Récupération du userId depuis les paramètres de requête
+      const { userId } = req.query
 
       const queryOptions = {
         include: [{
           model: userModel,
-          attributes: ['id', 'username', 'email'] // Inclure les informations de l'utilisateur
+          attributes: ['id', 'username', 'email'] 
         }]
       };
 
-      // Ajouter la condition de filtrage si userId est présent
       if (userId) {
         queryOptions.where = {
           userId: xss(userId)
@@ -44,12 +43,11 @@ if (req.method === 'GET') {
       const sanitizedData = {
         name: xss(req.body.name),
         description: xss(req.body.description),
-        userId: xss(req.body.userId), // Assurez-vous que userId est fourni et validé
+        userId: xss(req.body.userId),
         source: xss(req.body.source),
         rate: xss(req.body.rate),
       };
 
-      // Vérifier si l'utilisateur existe
       const user = await userModel.findByPk(sanitizedData.userId);
       if (!user) {
         return res.status(404).json({ error: 'User not found' });

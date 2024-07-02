@@ -4,9 +4,9 @@ import xss from 'xss';
 
 const handler = async (req, res) => {
   if (req.method === 'DELETE') {
-    const userId = xss(req.query.id); // Sanitize input
+    const userId = xss(req.query.id)
     try {
-      await sequelize.authenticate();
+      await sequelize.authenticate()
       const deleteUser = await User.destroy({ where: { id: userId } });
       if (deleteUser) {
         res.status(200).json({ message: 'User deleted successfully' });

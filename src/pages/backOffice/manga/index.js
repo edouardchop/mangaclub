@@ -19,17 +19,17 @@ export const getServerSideProps = authenticateAdmin(async ({ req }) => {
   }
 
   try {
-    const categoryResponse = await axios.get("http://localhost:3000/api/category");
+    const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category`);
     const { data: categoryData } = categoryResponse;
 
-    const userResponse = await axios.get('http://localhost:3000/api/auth/me', {
+    const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
       headers: {
         Cookie: `token=${token}`,
       },
     });
     const userData = userResponse.data.user;
 
-    const mangaResponse = await axios.get(`http://localhost:3000/api/manga?userId=${userData.userId}`);
+    const mangaResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/manga?userId=${userData.userId}`);
     const { data: mangaData } = mangaResponse;
 
     return {

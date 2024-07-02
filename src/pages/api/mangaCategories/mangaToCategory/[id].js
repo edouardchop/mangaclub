@@ -3,9 +3,8 @@ import MangaCategory from '@/api/db/models/MangaCategoryModel';
 import Category from '@/api/db/models/categoryModel';
 import xss from 'xss';
 
-/* donne les catégories associées à chaque manga */
 async function handler(req, res) {
-  const mangaId = xss(req.query.id); // Sanitize input
+  const mangaId = xss(req.query.id)
 
   if (req.method === 'GET') {
     try {
@@ -27,7 +26,7 @@ async function handler(req, res) {
     }
   } else if (req.method === 'DELETE') {
     try {
-      const categoryId = xss(req.body.categoryId); // Sanitize input
+      const categoryId = xss(req.body.categoryId)
       await MangaCategory.destroy({
         where: {
           mangaId: mangaId,

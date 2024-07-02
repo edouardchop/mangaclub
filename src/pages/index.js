@@ -10,13 +10,13 @@ import { useRouter } from "next/router";
 
 export const getServerSideProps = async () => {
   try {
-    const categoryResponse = await axios.get("http://localhost:3000/api/category");
+    const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category`);
     const { data: categoryData } = categoryResponse;
 
-    const mangaResponse = await axios.get("http://localhost:3000/api/manga");
+    const mangaResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/manga`);
     const { result: mangaList } = mangaResponse.data;
 
-    const categoryMangaResponse = await axios.get("http://localhost:3000/api/mangaCategories/categoryToManga");
+    const categoryMangaResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga`);
     const { data: categoryManga } = categoryMangaResponse;
 
 
@@ -52,7 +52,7 @@ export default function Home(props) {
     const categoryValue = category.filter(item => item.name.toLowerCase() === e.target.value.toLowerCase());
     if (categoryValue.length !== 0) {
       try {
-        const categoryResponse = await axios.get(`http://localhost:3000/api/mangaCategories/categoryToManga/${categoryValue[0].id}`);
+        const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${categoryValue[0].id}`);
         const newData = categoryResponse.data;
         setFilteredMangaData(newData);
       } catch (error) {
@@ -70,7 +70,7 @@ export default function Home(props) {
       const categoryValue = category.filter(item => item.name.toLowerCase() === text.toLowerCase());
       if (categoryValue.length !== 0) {
         try {
-          const categoryResponse = await axios.get(`http://localhost:3000/api/mangaCategories/categoryToManga/${categoryValue[0].id}`);
+          const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${categoryValue[0].id}`);
           const newData = categoryResponse.data;
           setFilteredMangaData(newData);
         } catch (error) {
@@ -87,7 +87,7 @@ export default function Home(props) {
     const categorySearch = category.filter(item => item.name.toLowerCase() === element.toLowerCase());
     if (categorySearch.length !== 0) {
       try {
-        const categoryResponse = await axios.get(`http://localhost:3000/api/mangaCategories/categoryToManga/${categorySearch[0].id}`);
+        const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${categorySearch[0].id}`);
         const newData = categoryResponse.data;
         setFilteredMangaData(newData);
         setNoManga(false);
@@ -111,7 +111,7 @@ export default function Home(props) {
     const idValue = e.target.value;
 
     try {
-      const categoryResponse = await axios.get(`http://localhost:3000/api/mangaCategories/categoryToManga/${idValue}`);
+      const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/mangaCategories/categoryToManga/${idValue}`);
       const newData = categoryResponse.data;
       setFilteredMangaData(newData);
       if (newData.length === 0) {

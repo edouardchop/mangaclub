@@ -3,9 +3,8 @@ import MangaCategory from '@/api/db/models/MangaCategoryModel';
 import Manga from '@/api/db/models/mangaModel';
 import xss from 'xss';
 
-/* On affiche les MANGAS associés à chaque catégories*/
 async function handler(req, res) {
-  const categoryId = xss(req.query.id); // Sanitize input
+  const categoryId = xss(req.query.id)
 
   if (req.method === 'GET') {
     try {

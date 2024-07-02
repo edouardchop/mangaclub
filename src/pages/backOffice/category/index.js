@@ -5,7 +5,7 @@ import LineBackOfficeCategory from "@/components/LineBackOfficeCategory";
 import authenticateAdmin from '@/middlewares/admin';
 
 export const getServerSideProps = authenticateAdmin(async ({ params }) => {
-  const categoryResponse = await axios.get("http://localhost:3000/api/category/");
+  const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category/`);
   const { data: categoryData } = categoryResponse;
 
   return {
@@ -29,7 +29,7 @@ export default function Category(props) {
   const deleteLine = async (line) => {
     const newLines = lines.filter(otherLine => otherLine[0] != line[0]);
     setLines(newLines);
-    const deleteLineData = await axios.delete(`http://localhost:3000/api/category/${line[0]}`);
+    const deleteLineData = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/category/${line[0]}`);
     const responseDelete = deleteLineData;
   }
 
@@ -40,19 +40,19 @@ export default function Category(props) {
 
   const sendCategoryData = async () => {
     try {
-      const categoryResponse = await axios.post('http://localhost:3000/api/category/', {
+      const categoryResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/category/`, {
         name: newText,
       });
       getCategoryData();
     } catch (error) {
-      console.error('Erreur lors de l envoi et recupération des données:', error);
+      console.error('Erreur lors de l\'envoi et récupération des données:', error);
       throw error;
     }
   }
 
   const getCategoryData = async () => {
     try {
-      const categoryResponse = await axios.get('http://localhost:3000/api/category/');
+      const categoryResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/category/`);
       const categoryData = categoryResponse.data.result;
       const newCategories = categoryData.map(category => [category.id, category.name]);
       setLines(newCategories);

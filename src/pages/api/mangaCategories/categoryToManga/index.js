@@ -11,7 +11,6 @@ const ensureDatabaseConnection = async () => {
   }
 };
 
-/* donne les mangas associés à chaque catégorie */
 const handler = async (req, res) => {
   if (req.method === 'GET') {
     try {

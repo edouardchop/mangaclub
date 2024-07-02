@@ -31,9 +31,9 @@ const handler = async (req, res) => {
       console.error('Erreur lors de la suppression du manga', error);
       res.status(500).json({ error: 'An error occurred while deleting the manga' });
     }
-  } else if (req.method === 'PUT') { // Ajout de l'opération d'update
-    const mangaId = xss(req.query.id); // Sanitize input
-    const { description } = req.body; // On suppose que la nouvelle description est envoyée dans le corps de la requête
+  } else if (req.method === 'PUT') { 
+    const mangaId = xss(req.query.id)
+    const { description } = req.body
     try {
       await sequelize.authenticate();
       const updateManga = await Manga.update({ description }, { where: { id: mangaId } });

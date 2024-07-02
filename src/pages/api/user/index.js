@@ -5,7 +5,6 @@ import xss from 'xss';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    // Sanitize input
     const sanitizedData = {
       firstname: xss(req.body.firstname),
       lastname: xss(req.body.lastname),
@@ -23,10 +22,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Create the user in the database
       const newUser = await User.create({
         firstname,
         lastname,
@@ -35,8 +31,6 @@ export default async function handler(req, res) {
         password: hashedPassword,
         role
       });
-
-      // Generate JWT token
       const token = jwt.sign({ username: newUser.username, role: newUser.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
       res.setHeader('Set-Cookie', `token=${token}; Secure; HttpOnly; SameSite=Strict; Path=/`);
       res.status(201).json({ message: 'User created successfully', user: newUser, token });
@@ -47,9 +41,7 @@ export default async function handler(req, res) {
   } 
 else if (req.method === 'GET') {
     try {
-      // Récupérer tous les utilisateurs depuis la base de données
       const users = await User.findAll();
-
       res.status(200).json({ users });
     } catch (error) {
       console.error('Error fetching users:', error);

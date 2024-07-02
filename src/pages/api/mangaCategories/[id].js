@@ -2,7 +2,6 @@ const { sequelize } = require( "@/api/db/newSequelize" )
 import  MangaCategory from '@/api/db/models/MangaCategoryModel'
 import Category from '@/api/db/models/categoryModel'
 
-/* donne les catégories associés à chaque manga*/
 
 async function handler ( req, res )
 {
