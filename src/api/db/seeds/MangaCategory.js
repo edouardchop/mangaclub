@@ -1,9 +1,7 @@
 exports.seed = async function (knex) {
-  // Supprimer les données existantes et réinitialiser les identités
   await knex.raw("TRUNCATE TABLE mangas RESTART IDENTITY CASCADE");
   await knex.raw("TRUNCATE TABLE categories RESTART IDENTITY CASCADE");
 
-  // Insérer des catégories
   const categories = await knex("categories").insert([
     {
      name:"Action",
@@ -22,7 +20,6 @@ exports.seed = async function (knex) {
     },
   ] ).returning('*')
 
-  // Insérer des mangas avec des catégories
   const mangas = await knex("mangas").insert([
     { name: "One Piece" },
     { name: "Naruto" },
@@ -31,7 +28,6 @@ exports.seed = async function (knex) {
     { name: "Jujutsu" },
   ]).returning('*')
 
-  // Insérer des associations dans la table intermédiaire
   const mangaCategories = await knex("MangaCategory").insert([
     { manga_id: mangas[0].id, category_id: categories[0].id },
     { manga_id: mangas[0].id, category_id: categories[4].id },
@@ -44,7 +40,5 @@ exports.seed = async function (knex) {
 
   ]).returning('*')
 
-  // Vous pouvez également logguer les données insérées si nécessaire
-  console.log("Manga et catégorie:", mangaCategories);
 
 };

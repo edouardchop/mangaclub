@@ -17,7 +17,6 @@ async function handler ( req, res )
       }
     } )
     const categoryIds = mangaCategories.map( category => category.categoryId );
-    console.log( "categoryIds", categoryIds )
     const category = await Category.findAll( {
       where: {
         id: categoryIds

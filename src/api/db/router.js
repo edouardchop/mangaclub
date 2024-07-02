@@ -10,7 +10,6 @@ const jwtCheck = auth({
   tokenSigningAlg: 'RS256'
 });
 
-// enforce on all endpoints
 app.use(jwtCheck);
 
 app.get('/authorized', function (req, res) {

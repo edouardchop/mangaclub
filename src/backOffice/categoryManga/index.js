@@ -29,20 +29,3 @@ getCateogryByManga= async ( req, res,manga ) =>
   res.send(result)
 }
 export default { getMangaByCategory, getCategoryByManga }
-
-/*
-const getmangaAction = async ( req, res ) =>
-{let result=[]
-  const action = await categoryModel.findOne( { where: { name: 'Action' } } );
-  const mangaAction = await MangaCategory.findAll( { where: { categoryId: action.id } } )
-  const mangaIdAction = mangaAction.map( manga => manga.mangaId )
-  for ( let i = 0; i < mangaIdAction.length; i++ )
-  {
-    const manga = await mangaModel.findOne( { where: { id: mangaIdAction[ i ] } } )
-    const name = manga.name
-    result.push(name)
-  }
-  res.send(result)
-}
-// Exportez la fonction getAll
-export default getmangaAction*/

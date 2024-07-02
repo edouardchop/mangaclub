@@ -1,7 +1,8 @@
-// mangasModel.js
 import { DataTypes } from 'sequelize';
-const {sequelize} = require('../newSequelize');
-const mangaModel = sequelize.define( 'mangas', {
+import { sequelize } from '../newSequelize';
+import userModel from './userModel';
+
+const mangaModel = sequelize.define('mangas', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -9,6 +10,18 @@ const mangaModel = sequelize.define( 'mangas', {
   },
   name: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  userId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: userModel,
+      key: 'id',
+    },
     allowNull: false,
   },
   createdAt: {
@@ -20,9 +33,12 @@ const mangaModel = sequelize.define( 'mangas', {
     field: 'updated_at',
   },
   source: {
-    type:DataTypes.STRING,
+    type: DataTypes.STRING,
   }
-  
 });
 
-export default mangaModel
+// Définir l'association
+mangaModel.belongsTo(userModel, { foreignKey: 'userId' });
+userModel.hasMany(mangaModel, { foreignKey: 'userId' });
+
+export default mangaModel;

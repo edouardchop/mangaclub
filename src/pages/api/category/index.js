@@ -1,70 +1,32 @@
+const categoryModel = require("../../../api/db/models/categoryModel");
+const { sequelize } = require("../../../api/db/newSequelize");
+const xss = require('xss');
 
-const categoryModel = require( "../../../api/db/models/categoryModel" )  
-const {sequelize} = require( "../../../api/db/newSequelize")
-    
-const handler=async(req,res)=>{
-if ( req.method === 'GET' )
-{
-
-    try
-    {
+const handler = async (req, res) => {
+  if (req.method === 'GET') {
+    try {
       await sequelize.authenticate();
-      const allCategories = await categoryModel.findAll()
-      console.log( "voici les categories dans getAll:", categoryModel )
-      res.send( { result: allCategories } )
-    } catch ( error )
-    {
-      console.error( 'Erreur lors de la récupération des catégories', error );
-      res.send( { error: error } ) // Vous pouvez gérer l'erreur en conséquence
+      const allCategories = await categoryModel.findAll();
+      res.status(200).json({ result: allCategories });
+    } catch (error) {
+      console.error('Erreur lors de la récupération des catégories', error);
+      res.status(500).json({ error: 'An error occurred while retrieving categories' });
     }
-}
-if ( req.method === 'POST' )
-{
-  try
-  {
-    await sequelize.authenticate();
-    const newCategory = await categoryModel.create(
-      {
-        name:req.body.name,
-      }
-    )
-  }
-    catch ( error )
-  {res.send( { error: error } )}
-  }
-}
-
-
-
-/*
-const getAll = async (req,res) => {
-  try {
-      const allCategories = await categoryModel.findAll()
-      console.log("voici les categories dans getAll:",categoryModel)
-      res.send({ result: allCategories })
-  } catch (error) {
-    console.error('Erreur lors de la récupération des catégories', error);
-    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
+  } else if (req.method === 'POST') {
+    try {
+      await sequelize.authenticate();
+      const sanitizedData = {
+        name: xss(req.body.name)
+      };
+      const newCategory = await categoryModel.create(sanitizedData);
+      res.status(201).json({ result: newCategory });
+    } catch (error) {
+      console.error('Erreur lors de la création de la catégorie', error);
+      res.status(500).json({ error: 'An error occurred while creating the category' });
+    }
+  } else {
+    res.status(405).json({ message: 'Method Not Allowed' });
   }
 };
 
-
-
-const categoryModel = require('../../../api/db/models/categoryModel');
-const sequelize = require( "../../../api/db/utils/newSequelize" )
-
-const getAll = async (req,res) => {
-  try
-  {
-        await sequelize.authenticate();
-      const allCategories = await categoryModel.findAll()
-      console.log("voici les categories dans getAll:",categoryModel)
-      res.send({ result: allCategories })
-  } catch (error) {
-    console.error('Erreur lors de la récupération des catégories', error);
-    res.send({error:error}) // Vous pouvez gérer l'erreur en conséquence
-  }
-};
-*/
-export default handler
-//export default ensureDatabaseConnection
+export default handler;

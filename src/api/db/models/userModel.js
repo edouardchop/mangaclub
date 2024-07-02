@@ -32,12 +32,12 @@ const userModel = sequelize.define('users', {
     allowNull: false,
   },
   createdAt: {
-    type: DataTypes.DATE, // Assurez-vous que le type est correct
-    field: 'created_at', // Spécifiez le nom de colonne utilisé dans PostgreSQL
+    type: DataTypes.DATE,
+    field: 'created_at',
   },
   updatedAt: {
-    type: DataTypes.DATE, // Assurez-vous que le type est correct
-    field: 'updated_at', // Spécifiez le nom de colonne utilisé dans PostgreSQL
+    type: DataTypes.DATE,
+    field: 'updated_at',
   },
 });
 
